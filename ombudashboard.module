@@ -707,12 +707,12 @@ function ombudashboard_find_node_submit($form_id, $form_state) {
 
 
 /**
- * Autocomplete 
+ * Autocomplete
  */
 function ombudashboard_node_title_autocomplete($string) {
   $items = array();
 
-  $records = db_query("SELECT DISTINCT nid, title FROM {node} WHERE status = :status AND title LIKE :title", array(':status' => 1, ':title' => "%$string%"));
+  $records = db_query("SELECT DISTINCT nid, title FROM {node} WHERE title LIKE :title", array(':title' => "%$string%"));
 
   foreach ($records as $row) {
     $items[$row->nid] = check_plain($row->title);
