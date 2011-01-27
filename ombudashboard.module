@@ -635,7 +635,7 @@ function ombudashboard_find_node_submit($form_id, $form_state) {
 function ombudashboard_node_title_autocomplete($string){
   $items = array();
 
-  $result = db_query("SELECT DISTINCT nid, title FROM {node} WHERE status = 1 AND title LIKE '%%%s%'", $string);
+  $result = db_query("SELECT DISTINCT nid, title FROM {node} WHERE title LIKE '%%%s%'", $string);
 
   while($obj = db_fetch_object($result)) {
     $items[$obj->nid] = check_plain($obj->title);
