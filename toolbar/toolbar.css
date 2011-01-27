@@ -1,0 +1,314 @@
+
+html.dashboardToolbar {
+    padding-top: 30px !important;
+}
+
+/* Clearfix */
+.clearfix:after
+{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+.clearfix { display: inline-block; }
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+
+/**
+ * Aggressive resets so we can achieve a consistent look in hostile CSS
+ * environments.
+ */
+#toolbar,
+#toolbar * {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 11px;
+  vertical-align: baseline;
+  line-height: inherit;
+  text-align: left;
+  list-style: none;
+  background-image: none;
+}
+
+/**
+ * Base styles.
+ */
+#toolbar {
+  font: normal 0.9em "Lucida Grande", Verdana, sans-serif;
+  color: #ccc;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3000;
+}
+
+#toolbar .toolbar-expanded-items {
+    background: #666666;
+}
+
+#toolbar .toolbar-expanded-items,
+#toolbar .toolbar-collapsed-items { display: none; }
+
+#toolbar div.collapsed {
+  display: none;
+  visibility: hidden;
+}
+
+#toolbar div.shadow {
+  position: absolute;
+  left: -7px;
+  right: -7px;
+  bottom: 0px;
+  height: 15px;
+  z-index: 3050;
+  -webkit-box-shadow: 0px 7px 7px #000000;
+  -moz-box-shadow: 0px 7px 7px #000000;
+  box-shadow: 0px 7px 7px #000000;
+  opacity: 0.3;
+}
+
+#toolbar a {
+  text-decoration: none;
+  color: #fff;
+}
+
+#toolbar ul li,
+#toolbar ul li a {
+  float: left;
+}
+
+#toolbar .toolbar-drawer li a {
+    display: inline;
+    float: none;
+}
+
+#toolbar div.toolbar-shortcuts ul li.operations {
+    margin-right: 10px;
+}
+#toolbar div.toolbar-shortcuts ul li.operations a {
+    float: none;
+    display: inline;
+    margin: 0;
+    padding: 5px;
+}
+
+/**
+ * Administration menu.
+ */
+#toolbar div.toolbar-menu {
+  background: #000;
+  line-height: 20px;
+  padding: 5px 10px 5px 0;
+  position: relative;
+  z-index: 3100;
+}
+
+#toolbar-home a span {
+  vertical-align: text-bottom;
+  width: 11px;
+  height: 14px;
+  display: block;
+  background: url(toolbar.png) no-repeat -6px -63px;
+  text-indent: -9999px;
+  margin: 3px 0px;
+}
+
+#toolbar-user {
+  float: right;
+}
+
+#toolbar-menu {
+  float: left;
+}
+
+#toolbar div.toolbar-menu a.toggle {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  cursor: pointer;
+  background: url(toolbar.png) 0 -20px no-repeat;
+  text-indent: -9999px;
+  overflow: hidden;
+  width: 25px;
+  height: 25px;
+}
+
+#toolbar div.toolbar-menu a.toggle-active {
+  background-position:  -25px -20px;
+}
+
+#toolbar div.toolbar-menu ul li a {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  padding: 0 10px;
+}
+
+#toolbar div.toolbar-menu ul li a:focus,
+#toolbar div.toolbar-menu ul li a:hover,
+#toolbar div.toolbar-menu ul li a.active:focus {
+  background: #444;
+}
+
+#toolbar #toolbar-local {
+    float: left;
+    margin: -5px 5px -10px 0;
+    padding: 5px;
+    background-color: #262626;
+}
+#toolbar #toolbar-local li a {
+
+}
+
+/**
+ * Collapsed drawer of additional toolbar content.
+ */
+#toolbar div.toolbar-drawer {
+  position: relative;
+  padding: 0 30px 0 10px;
+  z-index: 3100;
+}
+
+#toolbar .toolbar-drawer .drawer {
+    display: none;
+}
+
+#toolbar div.toolbar-drawer a.close-drawer {
+    display: block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    margin-top: -10px;
+    background: transparent url(close.png) no-repeat 0 0;
+    overflow: hidden;
+    text-indent: -999em;
+    font-size: 0;
+    line-height: 0;
+
+    display: none;
+}
+
+/**
+ * IE 6 Fix.
+ *
+ * IE 6 shows elements with position:fixed as position:static so we replace
+ * it with position:absolute; toolbar needs it's z-index to stay above overlay.
+ */
+* html #toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+/* From D7 Shortcuts module, provides styling for 2nd level toolbar items */
+div#toolbar a#edit-shortcuts {
+  float: right;
+  padding: 10px 10px 10px 5px;
+  line-height: 30px;
+  color: #bbb;
+}
+div#toolbar a#edit-shortcuts:focus,
+div#toolbar a#edit-shortcuts:hover,
+div#toolbar a#edit-shortcuts.active {
+  color: #fff;
+}
+
+div#toolbar div.toolbar-shortcuts ul {
+  padding: 5px 0;
+  line-height: 30px;
+  float: left;
+  margin-left:5px;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 5px 5px 5px 5px;
+  margin-right: 5px;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a:focus,
+div#toolbar div.toolbar-shortcuts ul li a:hover,
+div#toolbar div.toolbar-shortcuts ul li a.active:focus {
+  background: #555;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a.active:hover,
+div#toolbar div.toolbar-shortcuts ul li a.active {
+  background: #000;
+}
+
+div#toolbar div.toolbar-shortcuts .core-content select {
+    font-size: 12px;
+    padding: 4px;
+}
+
+div#toolbar div.toolbar-shortcuts span.icon {
+  float: left;
+  background: #444;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+#toolbar .toolbar-expand-button {
+    display: block;
+    width: 24px;
+    height: 25px;
+    padding: 3px 4px;
+    background: #000000 url(settings.png) no-repeat center center;
+
+    float: right;
+    margin-right: 5px;
+
+    overflow: hidden;
+    text-indent: -999em;
+    font-size: 0;
+    line-height: 0;
+
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    -webkit-box-shadow: 0px 0 5px  #262626;
+    -moz-box-shadow: 0px 0 5px #262626;
+    box-shadow: 0px 0 5px #262626;
+}
+
+#toolbar .toolbar-expand-button:hover {
+    background-color: #262626;
+}
+
+#toolbar .toolbar-collapse-button {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: #000000 url(collapse.png) no-repeat center top;
+    padding: 0 !important;
+    margin: 2px 4px 0;
+
+    overflow: hidden;
+    text-indent: -999em;
+    font-size: 0;
+    line-height: 0;
+
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+#toolbar .toolbar-collapse-button:hover {
+    background: #000000 url(collapse.png) no-repeat center -16px !important;
+}
