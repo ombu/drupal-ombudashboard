@@ -1,0 +1,8 @@
+; $Id$
+name = "OMBU Dashboard"
+description = "Provides a Dashboard for client admins so they don't have to deal with the whole Adimin interface"
+package = 'OMBU'
+core = 6.x
+php = 5.1
+dependencies[] = views_bulk_operations
+dependencies[] = statistics

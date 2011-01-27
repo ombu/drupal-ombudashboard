@@ -1,0 +1,646 @@
+<?php
+
+/**
+ * @file ombudashboard.module
+ *
+ *   Implements the dashboard and siteconfig functionality.
+ *   Dashboard blocks are defined in a file ombudashboard.admin_blocks.inc
+ *   that must live in the active front-end theme
+ *
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function ombudashboard_menu() {
+    $items['admin/dashboard'] = array(
+        'title' => 'Dashboard',
+        'page callback' => 'ombudashboard_page',
+        'access callback' => 'user_access',
+        'access arguments' => array('access the dashboard page'),
+        'weight' => -20,
+    );
+    $items['admin/siteconfig'] = array(
+        'title' => 'Site Configuration',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('siteconfig_form'),
+        'access callback' => 'user_access',
+        'access arguments' => array('configure ombu site'),
+        'type' => MENU_CALLBACK,
+        'weight' => 2,
+        'file' => 'siteconfig.inc.php'
+    );
+	$items['admin/dashboard/autocomplete_node_titles'] = array(
+		'page callback'    => 'ombudashboard_node_title_autocomplete',
+		'page arguments'    => array(3),
+		'access callback'  => 'user_access',
+		'access arguments' => array('access the dashboard page'),
+		'weight'           => - 20,
+	);
+    $items['admin/dashboard/supplementary-content/%'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('ombudashboard_supplementary_form', 3),
+        'access arguments' => array('edit supplementary content'),
+        'type' => MENU_CALLBACK,
+        'file' => 'supplementary_content.inc.php'
+    );
+
+    return $items;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function ombudashboard_theme($existing, $type, $theme, $path) {
+    return array(
+        'dashboard_page' => array(
+            'arguments' => array('block' => NULL),
+        ),
+        'ombu_admin_block_content' => array(
+            'arguments' => array('content' => NULL),
+        ),
+        'ombu_admin_block_content_manage' => array(
+            'arguments' => array('content' => NULL),
+        ),
+        'ombu_toolbar' => array(
+            'arguments' => array( 'vars' =>  NULL),
+        ),
+    );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function ombudashboard_perm() {
+    return array(
+        'access the dashboard page',
+        'redirect from admin to dashboard',
+        'configure ombu site',
+        'show dashboard toolbar',
+        'edit supplementary content',
+    );
+}
+
+/**
+ * Implementation of hook_user().
+ *
+ * Redirect users to homepage after login instead of the user's profile page
+ *
+ */
+function ombudashboard_user($op, &$edit, &$account, $category = NULL) {
+    global $user;
+
+    switch ($op) {
+        case 'login':
+
+            // Redirect to Dashboard if they have permissions
+            if (user_access('access the dashboard page')) {
+                $_REQUEST['destination'] = 'admin/dashboard';
+            } elseif (!$_REQUEST['destination']) {
+                drupal_goto('<front>');
+            }
+            break;
+
+        case 'form':
+            global $user;
+            // Site admin can only edit client users
+            if ($user->uid != $account->uid && in_array('site admin', $user->roles) && !in_array('client user', $account->roles)) {
+                drupal_goto('admin/user/user');
+            }
+
+            // deployment managers can only edit client users & site admins
+            if ($user->uid != $account->uid && in_array('deployment manager', $user->roles) && !( in_array('client user', $account->roles) || in_array('site admin', $account->roles) )) {
+                drupal_goto('admin/user/user');
+            }
+            break;
+    }
+}
+
+/**
+ * Implementation of hook_init().
+ * - Redirect user to admin/dashboard if they're not permissioned or user 1
+ * - Redirect user from admin/user/permissions if they're not user 1
+ */
+function ombudashboard_init() {
+    global $user;
+    if (trim($_REQUEST['q'], '/') == 'admin' && ( user_access('redirect from admin to dashboard') && $user->uid != 1 )) {
+        drupal_goto('admin/dashboard');
+    }
+
+    if (trim($_REQUEST['q'], '/') == 'admin/user/permissions' && $user->uid != 1) {
+        drupal_goto('admin/user/user');
+    }
+
+    // Use admin theme for user stuff
+    $match = preg_match('/(user$)|(user\/)/', $_SERVER['REQUEST_URI']);
+    if ($match) {
+        global $conf;
+        $conf['theme_default'] = variable_get('admin_theme', 'ombuadmin');
+    }
+}
+
+/**
+ * Page Preprocess
+ */
+function ombudashboard_preprocess_page(&$vars) {
+
+    global $theme;
+    global $user;
+
+    if ($theme == variable_get('admin_theme', '')) {
+        if ($_REQUEST['q'] == 'admin/dashboard' || $user->uid == 0) {
+            $vars['breadcrumb'] = '';
+        } else {
+            $vars['breadcrumb'] = '<div class="breadcrumb">' . l('&laquo; Back to Dashboard', 'admin/dashboard', array('html' => TRUE)) . '</div>';
+        }
+    }
+}
+
+/**
+ * Implementation of hook_menu_alter
+ */
+function ombudashboard_menu_alter(&$items) {
+
+    // Rename Taxonomy task to Categories
+    $items['admin/content/taxonomy/%taxonomy_vocabulary/add/term']['title'] = 'Add Category';
+
+    // Block access to menu edit & delete unless user is 'system'
+    $items['admin/build/menu-customize/%menu/edit']['access callback'] = 'ombudashboard_user_is_system';
+    $items['admin/build/menu-customize/%menu/delete']['access callback'] = 'ombudashboard_user_is_system';
+}
+
+function ombudashboard_user_is_system() {
+    global $user;
+    if ($user->uid == 1) {
+        return TRUE;
+    }
+    else {
+        return FALSE;
+    }
+}
+
+/**
+ * Implementation of hook_footer
+ */
+function ombudashboard_footer($front_page = 0) {
+
+    $out = '';
+
+    global $theme;
+    if ($theme != variable_get('admin_theme', '')) {
+
+        // Add Google Analytics if this is the front & a key is set
+        $google_analytics_key = variable_get('google_analytics_key', '');
+        if (!empty($google_analytics_key)) {
+            $out .= <<<JS
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("$google_analytics_key");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+JS;
+        }
+    }
+
+
+    // Add Toolbar
+    if (user_access('show dashboard toolbar')) {
+        $out .= theme('ombu_toolbar');
+    }
+
+    global $conf;
+    global $theme_key;
+    if ($theme_key == $conf['admin_theme']) {
+        drupal_add_js(array('backend' => TRUE, 'frontend' => FALSE), 'setting', 'footer');
+    }
+    else {
+        drupal_add_js(array('backend' => FALSE, 'frontend' => TRUE), 'setting', 'footer');
+    }
+
+    return $out;
+}
+
+/**
+ * Implementation of hook_views_api
+ */
+function ombudashboard_views_api() {
+    return array('api' => 2.0);
+}
+
+/**
+ * Dashboard page callback
+ */
+function ombudashboard_page() {
+    include_once(dirname(__File__) ."/supplementary_content.inc.php");
+
+    $admin_blocks_path = conf_path() . '/ombudashboard.admin_blocks.inc';
+    if (!file_exists($admin_blocks_path)) {
+        $example_path = drupal_get_path('module', 'ombudashboard') . '/ombudashboard.admin_blocks.inc.example';
+        drupal_set_message("Unable to load $admin_blocks_path. <br />A sample file can be found at $example_path" . ".example.", 'error');
+        return theme('dashboard_page', array());
+    }
+
+    require_once($admin_blocks_path);
+    $blocks = _ombudashboard_get_admin_blocks();
+    // footer makes sure this JS overrides others as it needs to
+    drupal_add_js(drupal_get_path('module', 'ombudashboard') . '/js/ombudashboard_page.js', 'module', 'footer');
+    return theme('dashboard_page', $blocks);
+}
+
+/**
+ * This function formats the dashboard page for viewing.
+ * It's based on theme_admin_page() in system.admin.inc
+ *
+ * @param $blocks
+ *   An array of blocks to display. Each array should include a
+ *   'title', a 'description', a formatted 'content' and a
+ *   'position' which will control which container it will be
+ *   in. This is usually 'left' or 'right'.
+ * @ingroup themeable
+ */
+function theme_dashboard_page($blocks) {
+    $stripe = 0;
+    $container = array();
+
+    foreach ($blocks as $block) {
+
+        if (empty($block['content'])) {
+            continue;
+        }
+
+        if ($block['theme']) {
+            $block['content'] = theme($block['theme'], $block['content']);
+        }
+
+        if ($block_output = theme('admin_block', $block)) {
+            if (empty($block['position'])) {
+                // perform automatic striping.
+                $block['position'] = ++$stripe % 2 ? 'left' : 'right';
+            }
+            if (!isset($container[$block['position']])) {
+                $container[$block['position']] = '';
+            }
+            $container[$block['position']] .= $block_output;
+        }
+    }
+
+    $output = '<div class="admin clear-block">';
+    $output .= '<div class="compact-link">';
+    $output .= '</div>';
+
+    foreach ($container as $id => $data) {
+        $output .= '<div class="' . $id . ' clear-block">';
+        $output .= $data;
+        $output .= '</div>';
+    }
+    $output .= '</div>';
+    return $output;
+}
+
+
+/**
+ * This function formats a dashboard page block to manage nodes of various types
+ *
+ * All other blocks should use theme_ombu_admin_block_content()
+ *
+ * @param $content
+ *   an array of grouped arrays
+ *   array(
+ *     'title' => 'FAQs',
+ *       'description' => 'Description',
+ *       'operations' => array(
+ *         0 => array(
+ *            'title' => 'Add',
+ *            'href' => 'node/add/faq',
+ *            'localized_options' => array(),
+ *         ),
+ *         1 => array(
+ *            'title' => 'Manage',
+ *            'href' => 'admin/dashboard/manage-content/faq',
+ *            'localized_options' => array(),
+ *         ),
+ *      ),
+ *   );
+ * @ingroup themeable
+ */
+function theme_ombu_admin_block_content_manage($content) {
+
+    if (!$content) {
+        return '';
+    }
+
+    $output .= '<ul class="admin-list">';
+    $output .= '<li id="core-content-operations"><dl>';
+    foreach ($content as $item) {
+
+        if (empty($item)) {
+            continue;
+        }
+
+        if (isset($item['operations'])) {
+            $t = str_replace('&', 'and', $item['title']);
+            $output .= '<dt class="'.$item['type'].'">' . $t . '</dt>';
+
+            $output .= '<dd class="'.$item['type'].'">';
+            foreach ($item['operations'] as $key => $op) {
+                $output .= ' ' . l($op['title'], $op['href'], $op['localized_options']);
+            }
+            $output .= "</dd>";
+        } else {
+            $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
+        }
+    }
+    $output .= '</dl><div class="description">Add or manage existing content by type.</div></li>';
+    $output .= '<li id="code-content-node-picker">';
+    $output .= drupal_get_form('ombudashboard_find_node');
+    $output .= '<div class="description">Find content by title.</div></li></ul>';
+    return $output;
+}
+
+function theme_ombu_admin_block_content($content) {
+    if (!$content) {
+        return '';
+    }
+
+    $output = '<ul class="admin-list">';
+    foreach ($content as $item) {
+
+        if (empty($item)) {
+            continue;
+        }
+
+        $output .= '<li>';
+        if (isset($item['operations'])) {
+            $t = str_replace('&', 'and', $item['title']);
+            $output .= '<dt class="'.$item['type'].'">';
+            $output .= $t .': ';
+
+            foreach ($item['operations'] as $key => $op) {
+                if ($key != 0) {
+                    $output .= ' - ';
+                }
+                $output .= l($op['title'], $op['href'], $op['localized_options']);
+            }
+            $output .= '</dt>';
+        } else {
+            $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
+        }
+        $output .= '<dd>' . $item['description'] . '</dd>';
+        $output .= '</li>';
+    }
+    $output .= '</ul>';
+    return $output;
+}
+
+function theme_ombu_toolbar(&$vars = null) {
+
+    $drawer_counter = 0;
+    $drawer = '';
+    $menu = '';
+
+    // This Page
+    $link = l('This Page', drupal_get_path_alias($_REQUEST['q']), array(
+                'fragment' => 'drawer-' . $drawer_counter,
+                'attributes' => array(
+                    'class' => 'drawer-link',
+                ),
+            ));
+    $this_page_links = '';
+    foreach (module_invoke_all('current_page_links') as $l) {
+
+        if (is_string($l)) {
+
+            $this_page_links .= $l;
+        } else {
+
+            if (!isset($l['options'])) {
+                $l['options'] = array();
+            }
+
+            $this_page_links .= theme('menu_item', l($l['title'], $l['href'], $l['options']));
+        }
+    }
+
+    $this_page_links = menu_primary_local_tasks() . $this_page_links
+            . menu_secondary_local_tasks();
+
+    if ($this_page_links) {
+        $menu .= '<ul id="toolbar-local">'
+                . theme('menu_item', $link, FALSE, '', FALSE, '') . '</ul>';
+        $drawer .= '<ul id="drawer-' . $drawer_counter . '" class="drawer">'
+                . $this_page_links . '</ul>';
+        $drawer_counter++;
+    }
+
+    // Load admin blocks
+    $admin_blocks_path = conf_path() . '/ombudashboard.admin_blocks.inc';
+    if (!file_exists($admin_blocks_path)) {
+        $example_path = drupal_get_path('module', 'ombudashboard') . '/ombudashboard.admin_blocks.inc.example';
+        drupal_set_message("Unable to load $admin_blocks_path. <br />A sample file can be found at $example_path" . ".example.", 'error');
+        return '';
+    }
+    require_once($admin_blocks_path);
+    $blocks = _ombudashboard_get_admin_blocks();
+    $dashboard = '';
+    foreach ($blocks as $i => $block) {
+
+        if (empty($block['content'])) {
+            continue;
+        }
+
+        // Top level item
+        $class = '';
+        if ($i == 0) {
+            $class = 'first';
+        }
+        if ($i == count($blocks) - 1) {
+            $class = 'last';
+        }
+
+        $link = l($block['title'], 'admin/dashboard', array(
+                    'html' => TRUE, // In case there are &amp; or &raquo; in the title
+                    'fragment' => 'drawer-' . $drawer_counter,
+                    'attributes' => array(
+                        'class' => 'drawer-link',
+                    ),
+                ));
+        $dashboard .= theme('menu_item', $link, FALSE, '', FALSE, $class);
+
+        // Drawer menu
+        $drawer_class = ($block['title'] == 'Core Content') ? 'core-content' : '';
+        $drawer .= '<ul id="drawer-' . $drawer_counter . '" class="drawer '. $drawer_class .'">';
+        foreach ($block['content'] as $j => $k) {
+
+            if (empty($k)) {
+                continue;
+            }
+
+            $class = '';
+            if ($j == 0) {
+                $class .= ' first';
+            }
+            if ($j == count($block['content']) - 1) {
+                $class .= ' last';
+            }
+
+            // Content operations block
+            if ($k['operations']) {
+
+                $class .= ' operations';
+                $link = '<span class="operation-object">'. $k['title'] . ':</span>';
+                $ops = array();
+                foreach ($k['operations'] as $o) {
+
+                    $ops[] = l($o['title'], $o['href'], $o['localized_options']);
+                }
+                $link .= implode('-', $ops);
+            } else {
+
+                if (!isset($k['localized_options'])) {
+                    $k['localized_options'] = array('attributes' => array());
+                }
+                if (!isset($k['localized_options']['attributes'])) {
+                    $k['localized_options']['attributes'] = array();
+                }
+                if ($k['description']) {
+                    $k['localized_options']['attributes']['title'] = $k['description'];
+                }
+                $link = l($k['title'], $k['href'], $k['localized_options']);
+            }
+
+            $drawer .= theme('menu_item', $link, FALSE, '', FALSE, $class);
+        }
+        $drawer .= '</ul>';
+        $drawer_counter++;
+    }
+    $menu .= '<ul id="toolbar-menu">' . $dashboard . '</ul>';
+
+
+    // Add user items
+    $curr_path = base_path();
+    if ($_REQUEST['q']) {
+        $curr_path .= drupal_get_path_alias($_REQUEST['q']);
+    }
+    global $user;
+    $menu .= <<<EOT
+<ul id="toolbar-user">
+    <li class="account first"><a title="Edit account" href="/user/$user->uid/edit">Welcome <strong>$user->name</strong></a></li>
+    <li class=""><a href="/admin/dashboard">Dashboard</a></li>
+    <li class=""><a href="/">Visit Site</a></li>
+    <li class="logout"><a href="/logout">Log out</a></li>
+    <li class="last"><a class="toolbar-collapse-button" href="$curr_path" title="Collapse Toolbar">Collapse Toolbar</a></li>
+</ul>
+EOT;
+
+    $css_src = base_path() . drupal_get_path('module', 'ombudashboard') .'/toolbar/toolbar.css';
+    $css_js = <<<EOL
+    var link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', '$css_src');
+    document.getElementsByTagName("head")[0].appendChild(link);
+EOL;
+    drupal_add_js($css_js, 'inline', 'footer', FALSE, FALSE);
+    drupal_add_js(drupal_get_path('module', 'ombudashboard') .'/toolbar/toolbar.js', 'module', 'footer', FALSE, FALSE);
+
+    return <<<EOT
+<div id="toolbar" class="toolbar overlay-displace-top clearfix toolbar-processed" style="display: none;">
+    <div class="toolbar-expanded-items clearfix">
+        <div class="toolbar-menu clearfix">
+            $menu
+        </div>
+        <div class="toolbar-drawer clearfix">
+            <div class="toolbar-shortcuts">
+                $drawer
+            </div>
+            <a href="#close" class="close-drawer">Close</a>
+        </div>
+        <div class="shadow"></div>
+    </div>
+    <div class="toolbar-collapsed-items clearfix">
+        <a class="toolbar-expand-button" title="Expand Toolbar" href="$curr_path">Expand Toolbar</a>
+    </div>
+</div>
+EOT;
+}
+
+/**
+ * Implementation of hook_current_page_links()
+ * @return mixed
+ *      Array of link items or string of rendered html
+ */
+function ombudashboard_current_page_links() {
+
+    return NULL;
+}
+
+function ombudashboard_content_edit($type, $label) {
+    if (user_access('create ' . $type . ' content')) {
+        $out = array(
+            'title' => $label,
+            'type' => $type,
+            'operations' => array(
+                array(
+                    'title' => 'Add',
+                    'href' => 'node/add/' . str_replace("_","-", $type),
+                    'localized_options' => array(),
+                ),
+            ),
+        );
+        if (user_access('delete own ' . $type . ' content')) {
+            $out['operations'][] = array(
+                'title' => 'Manage',
+                'href' => 'admin/dashboard/manage-content/' . $type,
+                'localized_options' => array(),
+            );
+        }
+    }
+    return is_array($out) ? $out : array();
+}
+
+function ombudashboard_find_node() {
+
+    $form['title'] = array(
+        '#type' => 'textfield',
+        '#autocomplete_path' => 'admin/dashboard/autocomplete_node_titles',
+        '#size' => 45,
+    );
+    $form['nid'] = array(
+        '#type' => 'hidden',
+        '#default_value' => '',
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Edit',
+    );
+    return $form;
+}
+
+function ombudashboard_find_node_validate($form_id, $form_state) {
+    if(!isset($form_state['values']['nid']) || !preg_match('/^\d+$/', $form_state['values']['nid'])) {
+        form_set_error('title', 'Sorry, something went wrong trying to edit this page.');
+    }
+}
+
+function ombudashboard_find_node_submit($form_id, $form_state) {
+    drupal_goto('node/' . $form_state['values']['nid'] . '/edit');
+}
+
+
+function ombudashboard_node_title_autocomplete($string){
+  $items = array();
+
+  $result = db_query("SELECT DISTINCT nid, title FROM {node} WHERE status = 1 AND title LIKE '%%%s%'", $string);
+
+  while($obj = db_fetch_object($result)) {
+    $items[$obj->nid] = check_plain($obj->title);
+  }
+
+  print drupal_json($items);
+  exit;
+}

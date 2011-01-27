@@ -1,0 +1,35 @@
+<?php
+// $Id$
+
+function ombudashboard_uninstall() {
+	// We no longer have these menus, but still deleting on unistall to
+	// support legacy versions
+	db_query("DELETE FROM {menu_custom} WHERE menu_name = 'dashboard-tasks'");
+	db_query("DELETE FROM {menu_links} WHERE module = 'ombudashboard'");
+}
+
+function ombudashboard_install() {
+	$strings = variable_get('locale_custom_strings_en', array());
+	$strings = array_merge($strings, array(
+		'Bulk operations' => 'Bulk',
+		'Delete node'     => 'Delete',
+		'Publish post'    => 'Publish',
+		'Unpublish post'  => 'Unpublish',
+		'Execute'         => 'Go',
+	));
+	variable_set('locale_custom_strings_en', $strings);
+}
+
+function ombudashboard_update_6001() {
+	// Remove the old menu if it still exists
+	db_query("DELETE FROM {menu_custom} WHERE menu_name = 'dashboard-tasks'");
+	db_query("DELETE FROM {menu_links} WHERE module = 'ombudashboard'");
+
+	// Add toolbar permission to authenticated users
+	$rid = db_result(db_query("SELECT rid FROM {role} WHERE name = '%s'", 'authenticated user'));
+	$perms = db_result(db_query("SELECT perm FROM {permission} WHERE rid = %d", $rid));
+	$perms .= ', show dashboard toolbar';
+	db_query("UPDATE {permission} SET perm = '%s' WHERE rid = %d", array($perms, $rid));
+
+	return array();
+}
