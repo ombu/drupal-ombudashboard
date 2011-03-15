@@ -66,17 +66,19 @@ function ombudashboard_get_supplementary_content_list() {
 /**
  * Callback for the given $delta. Presents the form to the user.
  */
-function ombudashboard_supplementary_form($form_state, $delta) {
+function ombudashboard_supplementary_form($form, $form_state, $delta) {
 
     $list = module_invoke_all('supplementary_content', 'list', NULL, NULL);
     drupal_set_title($list[$delta]['title']);
 
     $form = module_invoke_all('supplementary_content', 'form', $delta, NULL);
     $form['#delta'] = $delta;
-    $form = system_settings_form($form);
-    unset($form['buttons']['reset']);
-    $form['buttons']['submit']['#value'] = 'Save';
-    $form['buttons']['#weight'] = 50;
+    // Check if supplementary content will handle own submission
+    if (!isset($list[$delta]['handle own submission'])) {
+      $form = system_settings_form($form);
+    }
+    $form['actions']['submit']['#value'] = 'Save';
+    $form['actions']['#weight'] = 50;
     $form['#submit'][] = 'ombudashboard_supplementary_content_callback_save';
     return $form;
 }
@@ -87,4 +89,80 @@ function ombudashboard_supplementary_form($form_state, $delta) {
 function ombudashboard_supplementary_content_callback_save($form, $form_state) {
     $delta = $form['#delta'];
     module_invoke_all('supplementary_content', 'save', $delta, $form_state['values']);
+}
+
+/**
+ * Implementation of hook_supplementary_content().
+ *
+ * Show simple edit form for blocks.  Blocks will be displayed if module/delta 
+ * is set in the block_simple_ui variable.
+ */
+function ombudashboard_supplementary_content($op, $delta = NULL, $edit = NULL) {
+  switch ($op) {
+    case 'list':
+      // Only show if blocks are set.
+      if (variable_get('block_simple_ui', array())) {
+        return array(
+          'blocks' => array(
+            'title' => t('Block Content'),
+            'description' => t('Edit block content'),
+            'permission' => 'administer blocks',
+            'handle own submission' => TRUE,
+          ),
+        );
+      }
+      break;
+
+    case 'form':
+      switch ($delta) {
+        case 'blocks':
+          $form = array();
+          $form['#tree'] = TRUE;
+          $blocks = variable_get('block_simple_ui', array());
+          module_load_include('inc', 'block', 'block.admin');
+          foreach ($blocks as $block) {
+            // Load block and block info
+            $block = block_load($block['module'], $block['delta']);
+            $info = module_invoke($block->module, 'block_info');
+
+            // block form sets title, so we need to set it back
+            $title = drupal_get_title();
+            $block_form = drupal_get_form('block_admin_configure', $block->module, $block->delta);
+            drupal_set_title($title);
+
+            $form['blocks'][$block->module][$block->delta] = array(
+              '#title' => $info[$block->delta]['info'],
+              '#type' => 'fieldset',
+              '#collapsible' => TRUE,
+              '#collapsed' => TRUE,
+            );
+
+            $hide_fields = array('info');
+            foreach ($hide_fields as $hide) {
+              $block_form['settings'][$hide]['#access'] = FALSE;
+            }
+
+            foreach (element_children($block_form['settings']) as $field) {
+              $block_form['settings'][$field]['#tree'] = TRUE;
+              unset($block_form['settings'][$field]['#parents']);
+            }
+            unset($block_form['settings']['#parents']);
+
+            // For some reason, format is showing above body by default.
+            $block_form['settings']['body_field']['body']['format']['#weight'] = 100;
+
+            $form['blocks'][$block->module][$block->delta] += $block_form['settings'];
+          }
+          $form['actions']['submit'] = array(
+            '#type' => 'submit',
+            '#value' => 'Save',
+          );
+          return $form;
+          break;
+      }
+      break;
+
+    case 'save':
+      break;
+  }
 }
