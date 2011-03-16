@@ -116,8 +116,10 @@ function ombudashboard_supplementary_content($op, $delta = NULL, $edit = NULL) {
     case 'form':
       switch ($delta) {
         case 'blocks':
-          $form = array();
-          $form['#tree'] = TRUE;
+          $form = array(
+            'blocks' => array(),
+          );
+
           $blocks = variable_get('block_simple_ui', array());
           module_load_include('inc', 'block', 'block.admin');
           foreach ($blocks as $block) {
@@ -125,33 +127,45 @@ function ombudashboard_supplementary_content($op, $delta = NULL, $edit = NULL) {
             $block = block_load($block['module'], $block['delta']);
             $info = module_invoke($block->module, 'block_info');
 
-            // block form sets title, so we need to set it back
-            $title = drupal_get_title();
-            $block_form = drupal_get_form('block_admin_configure', $block->module, $block->delta);
-            drupal_set_title($title);
-
+            // #tree behaviour is broken in D7: children elements with #tree set 
+            // to FALSE will break out of the tree.  So #parents needs to be set 
+            // instead.
+            // @see http://drupal.org/node/759222
+            if (!isset($form['blocks'][$block->module])) {
+              $form['blocks'][$block->module] = array(
+                '#parents' => array('blocks'),
+              );
+            }
             $form['blocks'][$block->module][$block->delta] = array(
               '#title' => $info[$block->delta]['info'],
               '#type' => 'fieldset',
               '#collapsible' => TRUE,
-              '#collapsed' => TRUE,
+              '#collapsed' => FALSE,
+              '#parents' => array('blocks', $block->module),
             );
 
-            $hide_fields = array('info');
-            foreach ($hide_fields as $hide) {
-              $block_form['settings'][$hide]['#access'] = FALSE;
+            $form['blocks'][$block->module][$block->delta]['title'] = array(
+              '#title' => 'Title',
+              '#type' => 'textfield',
+              '#default_value' => $block->title,
+              '#description' => $block->module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>!placeholder</em> to display no title, or leave blank to use the default block title.', array('!placeholder' => '&lt;none&gt;')),
+              '#parents' => array('blocks', $block->module, $block->delta, 'title'),
+            );
+
+            // Module-specific block configuration.
+            if ($settings = module_invoke($block->module, 'block_configure', $block->delta)) {
+              foreach ($settings as $k => $v) {
+                // Special case for the body field for block_custom blocks.
+                if ($k == 'body_field') {
+                  $v['body']['#parents'] = array('blocks', $block->module, $block->delta, 'body');
+                }
+                else {
+                  $v['#parents'] = array('blocks', $block->module, $block->delta, $k);
+                }
+
+                $form['blocks'][$block->module][$block->delta]['settings'][$k] = $v;
+              }
             }
-
-            foreach (element_children($block_form['settings']) as $field) {
-              $block_form['settings'][$field]['#tree'] = TRUE;
-              unset($block_form['settings'][$field]['#parents']);
-            }
-            unset($block_form['settings']['#parents']);
-
-            // For some reason, format is showing above body by default.
-            $block_form['settings']['body_field']['body']['format']['#weight'] = 100;
-
-            $form['blocks'][$block->module][$block->delta] += $block_form['settings'];
           }
           $form['actions']['submit'] = array(
             '#type' => 'submit',
@@ -163,6 +177,20 @@ function ombudashboard_supplementary_content($op, $delta = NULL, $edit = NULL) {
       break;
 
     case 'save':
+      // Save each block.
+      foreach ($edit['blocks'] as $module => $deltas) {
+        foreach ($deltas as $delta => $values) {
+          db_update('block')
+            ->fields(array(
+              'title' => $values['title'],
+            ))
+            ->condition('module', $module)
+            ->condition('delta', $delta)
+            ->execute();
+          module_invoke($module, 'block_save', $delta, $values);
+        }
+      }
+      drupal_set_message(t('The block configuration has been saved.'));
       break;
   }
 }
