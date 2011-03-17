@@ -7,9 +7,8 @@ jQuery(document).ready(function() {
 	coreContentDropdown();
     jQuery('#ombudashboard-find-node #edit-submit').addClass('disabled').attr('disabled', 'disabled');
     jQuery('#ombudashboard-find-node').submit(function(e) {
-
         e.preventDefault();
-        var v = jQuery('#edit-nid').val().match(/^\d+$/);
+        var v = jQuery('#ombudashboard-find-node input[name="nid"]').val().match(/^\d+$/);
         if(v) {
             window.location = '/node/' + v + '/edit';
         }
@@ -64,76 +63,63 @@ function coreContentDropdown() {
 /**
  * Autocomplete overrides to allow selecting & viewing node title and saving the node ID on a hidden field.
  * NOTE: This can break other autocompletes. SHOULD ONLY BE USED ON THE DASHBOARD PAGE
+ */
 if (Drupal.jsAC) {
-  Drupal.jsAC.prototype.select = function (node) {
-	  
-	  console.log(jQuery(node).data('autocompleteValue'));
-      this.inputId = jQuery('#edit-nid')[0];
-      //this.input.value = node.autocompleteValue;
-      //this.setId(node.autocompleteId);
-  };
-
-  Drupal.jsAC.prototype.hidePopup = function (keycode) {
-
+    Drupal.jsAC.prototype.hidePopup = function (keycode) {
       if(this.selected) {
           jQuery('#ombudashboard-find-node #edit-submit').removeClass('disabled').removeAttr('disabled');
       }
       else {
           jQuery('#ombudashboard-find-node #edit-submit').addClass('disabled').attr('disabled', 'disabled');
       }
-
-      // Select item if the right key or mousebutton was pressed
+      // Select item if the right key or mousebutton was pressed.
       if (this.selected && ((keycode && keycode != 46 && keycode != 8 && keycode != 27) || !keycode)) {
-		  this.input.value = jQuery(this.selected).data('autocompleteValue');
-          //this.input.value = this.selected.autocompleteValue;
-          //this.setId(this.selected.autocompleteId);
+        var nid = jQuery(this.selected).data('autocompleteValue');
+        var title = jQuery(this.selected).data('autocompleteValueTitle');
+        jQuery(this.input).val(title);
+        jQuery('#ombudashboard-find-node input[name="nid"]').val(nid); // Sets the hidden input
+
       }
-      // Hide popup
+      // Hide popup.
       var popup = this.popup;
       if (popup) {
-          this.popup = null;
-          jQuery(popup).fadeOut('fast', function() { jQuery(popup).remove(); });
+        this.popup = null;
+        jQuery(popup).fadeOut('fast', function () {jQuery(popup).remove();});
       }
       this.selected = false;
-  };
+      jQuery(this.ariaLive).empty();
+    };
 
-  Drupal.jsAC.prototype.found = function (matches) {
-      // If no value in the textfield, do not show the popup.
-      if (!this.input.value.length) {
+    Drupal.jsAC.prototype.found = function (matches) {
+        // If no value in the textfield, do not show the popup.
+        if (!this.input.value.length) {
           return false;
       }
-      // Prepare matches
-      var ul = document.createElement('ul');
+
+      // Prepare matches.
+      var ul = jQuery('<ul></ul>');
       var ac = this;
       for (key in matches) {
-          var li = document.createElement('li');
-          jQuery(li)
-              .html('<div>'+ matches[key] +'</div>')
-              .mousedown(function () { ac.select(this); })
-              .mouseover(function () { ac.highlight(this); })
-              .mouseout(function () { ac.unhighlight(this); });
-          li.autocompleteValue = matches[key];
-          li.autocompleteId = key;
-          jQuery(ul).append(li);
+        jQuery('<li></li>')
+          .html(jQuery('<div></div>').html(matches[key]))
+          .mousedown(function () { ac.select(this); })
+          .mouseover(function () { ac.highlight(this); })
+          .mouseout(function () { ac.unhighlight(this); })
+          .data('autocompleteValue', key)
+          .data('autocompleteValueTitle', matches[key])
+          .appendTo(ul);
       }
 
-      // Show popup with matches, if any
+      // Show popup with matches, if any.
       if (this.popup) {
-          if (ul.childNodes.length > 0) {
-              jQuery(this.popup).empty().append(ul).show();
-          }
-          else {
-              jQuery(this.popup).css({visibility: 'hidden'});
-              this.hidePopup();
-          }
+        if (ul.children().size()) {
+          jQuery(this.popup).empty().append(ul).show();
+          jQuery(this.ariaLive).html(Drupal.t('Autocomplete popup'));
+        }
+        else {
+          jQuery(this.popup).css({ visibility: 'hidden' });
+          this.hidePopup();
+        }
       }
-  };
-  Drupal.jsAC.prototype.setId = function (id) {
-    return;
-      if (typeof this.idField == 'undefined') {
-          this.inputId = jQuery('#edit-nid')[0];
-      }
-      this.inputId.value = id;
-  }
+    };
 }
-*/

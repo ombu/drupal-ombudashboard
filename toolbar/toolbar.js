@@ -19,24 +19,27 @@ Drupal.dashboardToolbar = {
 
         // Show toolbar div
         // Was hidden to avoid a flash of it unstyled
-        $('#toolbar').show();
+        jQuery('#toolbar').show();
 
         // Initial collapsed/expanded State
         if ( Drupal.settings.frontend && Drupal.dashboardToolbar.util.readCookie('dashboardToolbar.collapsed') == 1 ) {
-            $('.toolbar-collapsed-items').css('display', 'block');
-            $(window).trigger('toolbar.close', {init: true});
+            jQuery('.toolbar-collapsed-items').css('display', 'block');
+            jQuery(window).trigger('toolbar.close', {init: true});
         } else {
-            $('.toolbar-expanded-items').css('display', 'block');
-            $(window).trigger('toolbar.open', {init: true});
-            $('html').addClass('dashboardToolbar');
+            jQuery('.toolbar-expanded-items').css('display', 'block');
+            jQuery(window).trigger('toolbar.open', {init: true});
+            jQuery('html').addClass('dashboardToolbar');
         }
 
+        console.debug(Drupal.settings.backend);
         if (Drupal.settings.backend) {
-            $('#toolbar .toolbar-collapse-button').hide();
+            jQuery('#toolbar .toolbar-collapse-button').hide();
+        } else {
+            jQuery('#toolbar .visit-site').hide();
         }
 
         // Set Drawer close timer on toolbar hover
-        $('#toolbar:not(.toolbar-hover-processed)')
+        jQuery('#toolbar:not(.toolbar-hover-processed)')
             .hover(
                 Drupal.dashboardToolbar.cancelDrawerTimer,
                 Drupal.dashboardToolbar.startDrawerTimer
@@ -45,7 +48,7 @@ Drupal.dashboardToolbar = {
 
         // Open Drawer when a toolbar link with corresponding drawer is hovered
         //   (known by .drawer-link class)
-        $('.toolbar-menu .drawer-link:not(.drawer-link-processed)')
+        jQuery('.toolbar-menu .drawer-link:not(.drawer-link-processed)')
             .hover(
                 Drupal.dashboardToolbar.openDrawer,
                 function(e) {}
@@ -53,19 +56,19 @@ Drupal.dashboardToolbar = {
             .addClass('drawer-link-processed');
 
         // Bind closeDrawer to the drawers' close button
-        $('.toolbar-drawer .close-drawer:not(.drawer-close-processed)')
+        jQuery('.toolbar-drawer .close-drawer:not(.drawer-close-processed)')
             .click( Drupal.dashboardToolbar.closeDrawer )
             .addClass('drawer-close-processed');
 
         // Bind Toolbar collapsed/expanded state to collapse/expand buttons
-        $('.toolbar-collapse-button:not(.toolbar-collapse-processed), .toolbar-expand-button:not(.toolbar-collapse-processed)')
+        jQuery('.toolbar-collapse-button:not(.toolbar-collapse-processed), .toolbar-expand-button:not(.toolbar-collapse-processed)')
             .click( Drupal.dashboardToolbar.collapseToggle )
             .addClass('toolbar-collapse-processed');
 
         // Setup content management picker
-        if ($('.toolbar-shortcuts .core-content').length > 0) {
+        if (jQuery('.toolbar-shortcuts .core-content').length > 0) {
 
-            var items = $('.toolbar-shortcuts .core-content li');
+            var items = jQuery('.toolbar-shortcuts .core-content li');
             // break if there's only one
             if (items.length < 2) {
                 return;
@@ -86,22 +89,22 @@ Drupal.dashboardToolbar = {
             s.className = "form-select";
             addOption(s, 'null', '-- Choose a type of content --');
             items.each( function(i) {
-                addOption(s, i, $('.operation-object', this).text().replace(':', ''));
-                $('.operation-object', this).hide();
+                addOption(s, i, jQuery('.operation-object', this).text().replace(':', ''));
+                jQuery('.operation-object', this).hide();
             });
 
             items.hide();
 
-            $('<li class="leaf first operation-controller operations"></li>')
+            jQuery('<li class="leaf first operation-controller operations"></li>')
                 .prependTo('.toolbar-shortcuts .core-content')
                 .append(s);
 
-            $(s)
+            jQuery(s)
                 .change(function(ev){
                     var i = ev.target.value;
                     items.hide();
                     if(i == 'null') return;
-                    $(items[i]).show();
+                    jQuery(items[i]).show();
                 })
                 .hover(
                     function(e) {
@@ -118,30 +121,30 @@ Drupal.dashboardToolbar = {
 
     openDrawer: function(e) {
 
-        $('.toolbar-menu .drawer-link').blur();
+        jQuery('.toolbar-menu .drawer-link').blur();
 
-        var id = $(this).focus().attr('href').split('#').pop();
+        var id = jQuery(this).focus().attr('href').split('#').pop();
 
-        $('.toolbar-drawer .drawer')
+        jQuery('.toolbar-drawer .drawer')
             .hide()
             .filter('#'+id)
             .show();
 
-        $('.toolbar-drawer .close-drawer').show();
-        $(window).trigger('toolbar.drawerOpen');
+        jQuery('.toolbar-drawer .close-drawer').show();
+        jQuery(window).trigger('toolbar.drawerOpen');
     },
 
     closeDrawer: function(e) {
 
         if (e) { e.preventDefault(); }
 
-        $('.toolbar-drawer .close-drawer').hide();
-        $('.toolbar-drawer .drawer').slideUp(100);
-        $('.toolbar-menu .drawer-link').blur();
+        jQuery('.toolbar-drawer .close-drawer').hide();
+        jQuery('.toolbar-drawer .drawer').slideUp(100);
+        jQuery('.toolbar-menu .drawer-link').blur();
 
         Drupal.dashboardToolbar.cancelDrawerTimer();
-        $(window).unbind('click.dashboardToolbar');
-        $(window).trigger('toolbar.drawerClose');
+        jQuery(window).unbind('click.dashboardToolbar');
+        jQuery(window).trigger('toolbar.drawerClose');
     },
 
     startDrawerTimer: function() {
@@ -152,7 +155,7 @@ Drupal.dashboardToolbar = {
         }
 
         // Set Click handler
-        $(window).bind('click.dashboardToolbar', Drupal.dashboardToolbar.clickHandler);
+        jQuery(window).bind('click.dashboardToolbar', Drupal.dashboardToolbar.clickHandler);
 
         // Start Timer
         Drupal.dashboardToolbar.closeDrawerTimer = setTimeout("Drupal.dashboardToolbar.closeDrawer()", 500);
@@ -172,7 +175,7 @@ Drupal.dashboardToolbar = {
 
     clickHandler: function(e) {
 
-        if ( !$(e.target).hasParent('#toolbar') ) {
+        if ( !jQuery(e.target).hasParent('#toolbar') ) {
 
             Drupal.dashboardToolbar.closeDrawer();
 
@@ -184,13 +187,13 @@ Drupal.dashboardToolbar = {
         if (e) { e.preventDefault(); }
 
         // Collapse Toolbar
-        if ( $('.toolbar-expanded-items').is(':visible') ) {
+        if ( jQuery('.toolbar-expanded-items').is(':visible') ) {
 
-            $('.toolbar-expanded-items').slideUp(200, function() {
+            jQuery('.toolbar-expanded-items').slideUp(200, function() {
 
-                $('.toolbar-collapsed-items').slideDown(200);
-                $('html').removeClass('dashboardToolbar');
-                $(window).trigger('toolbar.close', {init: false});
+                jQuery('.toolbar-collapsed-items').slideDown(200);
+                jQuery('html').removeClass('dashboardToolbar');
+                jQuery(window).trigger('toolbar.close', {init: false});
 
             });
 
@@ -199,11 +202,11 @@ Drupal.dashboardToolbar = {
         // Expand Toolbar
         } else {
 
-            $('.toolbar-collapsed-items').slideUp(200, function() {
+            jQuery('.toolbar-collapsed-items').slideUp(200, function() {
 
-                $('.toolbar-expanded-items').slideDown(200);
-                $('html').addClass('dashboardToolbar');
-                $(window).trigger('toolbar.open', {init: false});
+                jQuery('.toolbar-expanded-items').slideDown(200);
+                jQuery('html').addClass('dashboardToolbar');
+                jQuery(window).trigger('toolbar.open', {init: false});
 
             });
 
@@ -251,15 +254,15 @@ Drupal.dashboardToolbar = {
 };
 
 
-Drupal.behaviors.dashboardToolbar = function(context) {
-
-    if ( $('#toolbar.dashboardToolbarProcessed').length > 0 ) { return; }
+Drupal.behaviors.dashboardToolbar = {
+  attach: function(context) {
+    if ( jQuery('#toolbar.dashboardToolbarProcessed').length > 0 ) { return; }
 
     Drupal.dashboardToolbar.init();
 
-    $('#toolbar').addClass('dashboardToolbarProcessed');
-
-}
+    jQuery('#toolbar').addClass('dashboardToolbarProcessed');
+  }
+};
 
 /*
 	* Test whether argument elements are parents
@@ -268,11 +271,11 @@ Drupal.behaviors.dashboardToolbar = function(context) {
 	* @param objs
 	* 	a jQuery selector, selection, element, or array of elements
 */
-$.fn.hasParent = function(objs) {
+jQuery.fn.hasParent = function(objs) {
 	// ensure that objs is a jQuery array
-	objs = $(objs); var found = false;
-	$(this[0]).parents().andSelf().each(function() {
-		if ($.inArray(this, objs) != -1) {
+	objs = jQuery(objs); var found = false;
+	jQuery(this[0]).parents().andSelf().each(function() {
+		if (jQuery.inArray(this, objs) != -1) {
 			found = true;
 			return false; // stops the each...
 		}

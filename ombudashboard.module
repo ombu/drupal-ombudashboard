@@ -63,7 +63,11 @@ function ombudashboard_theme($existing, $type, $theme, $path) {
       'variables' => array('content' => NULL),
     ),
     'ombu_toolbar' => array(
-      'variables' => array('vars' => NULL),
+      'variables' => array(),
+      'template' => 'ombu_toolbar',
+    ),
+    'ombu_toolbar_operations' => array(
+      'variables' => array('title' => NULL, 'operations' => array(), 'attributes' => array()),
     ),
   );
 }
@@ -131,8 +135,8 @@ function ombudashboard_user_XXX($edit, $account) {
  */
 function ombudashboard_admin_paths_alter(&$paths) {
   // Treat all user pages as administrative.
-  $paths['user'] = TRUE;
-  $paths['user/*'] = TRUE;
+  //$paths['user'] = TRUE;
+  //$paths['user/*'] = TRUE;
 }
 
 /**
@@ -181,13 +185,12 @@ JS;
   }
 
   // Add Toolbar
-  /* Disable toolbar for now and use D7 default toolbar.
+  // Disable toolbar for now and use D7 default toolbar.
   if (user_access('show dashboard toolbar')) {
     $page['page_bottom']['ombu_toolbar'] = array(
       '#theme' => 'ombu_toolbar',
     );
   }
-  */
 
   global $conf;
   global $theme_key;
@@ -444,50 +447,53 @@ function theme_ombu_admin_block_content($variables) {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Preprocess variables for ombu_toolbar.tpl.php
  */
-function theme_ombu_toolbar($variables) {
-  $vars = $variables['vars'];
-
+function template_preprocess_ombu_toolbar(&$variables) {
   $drawer_counter = 0;
   $drawer = '';
   $menu = '';
 
-  // This Page
-  $link = l('This Page', drupal_get_path_alias($_REQUEST['q']), array(
-    'fragment' => 'drawer-' . $drawer_counter,
-    'attributes' => array(
-      'class' => array('drawer-link'),
-    ),
-  ));
-  $this_page_links = '';
+  // Build local tasks links.
+  $this_page_links = array();
+  // Allow other modules to add local links to toolbar.
   foreach (module_invoke_all('current_page_links') as $l) {
-
-    if (is_string($l)) {
-
-      $this_page_links .= $l;
+    if (!isset($l['#localized_options'])) {
+      $l['#localized_options'] = array();
     }
-    else {
-
-      if (!isset($l['options'])) {
-        $l['options'] = array();
-      }
-
-      // TODO Please change this theme call to use an associative array for the $variables parameter.
-      $this_page_links .= theme('menu_link', l($l['title'], $l['href'], $l['options']));
-    }
+    $this_page_links[] = array(
+      '#theme' => 'menu_local_task',
+      '#link' => $l,
+    );
   }
 
-  $this_page_links = menu_primary_local_tasks() . $this_page_links
-            . menu_secondary_local_tasks();
+  // Pull in default Drupal primary and secondary local tasks.
+  if ($primary_local_tasks = menu_primary_local_tasks()) {
+    $this_page_links = $primary_local_tasks + $this_page_links;
+  }
+  if ($secondary_local_tasks = menu_secondary_local_tasks()) {
+    $this_page_links += $secondary_local_tasks;
+  }
+  if (!empty($this_page_links)) {
+    $menu['this_page'] = array(
+      '#weight' => -10,
+      '#prefix' => '<ul id="toolbar-local">',
+      '#suffix' => '</ul>',
+      '#theme' => 'menu_link',
+      '#title' => 'This Page',
+      '#href' => drupal_get_path_alias(),
+      '#localized_options' => array(
+        'fragment' => 'drawer-' . $drawer_counter,
+        'attributes' => array(
+          'class' => array('drawer-link'),
+        ),
+      ),
+    );
 
-  if ($this_page_links) {
-    // TODO Please change this theme call to use an associative array for the $variables parameter.
-    $menu .= '<ul id="toolbar-local">'
-                . theme('menu_link', $link, FALSE, '', FALSE, '') . '</ul>';
-    $drawer .= '<ul id="drawer-' . $drawer_counter . '" class="drawer">'
-                . $this_page_links . '</ul>';
+    $this_page_links['#prefix'] = '<ul id="drawer-' . $drawer_counter . '" class="drawer">';
+    $this_page_links['#suffix'] = '</ul>';
+    $drawer['this_page'] = $this_page_links;
+
     $drawer_counter++;
   }
 
@@ -498,102 +504,172 @@ function theme_ombu_toolbar($variables) {
     drupal_set_message("Unable to load $admin_blocks_path. <br />A sample file can be found at $example_path" . ".example.", 'error');
     return '';
   }
+
   require_once DRUPAL_ROOT . '/' . $admin_blocks_path;
   $blocks = _ombudashboard_get_admin_blocks();
-  $dashboard = '';
-  foreach ($blocks as $i => $block) {
+  if ($blocks) {
+    $menu['dashboard'] = array(
+      '#prefix' => '<ul id="toolbar-menu">',
+      '#suffix' => '</ul>',
+    );
+    foreach ($blocks as $i => $block) {
 
-    if (empty($block['content'])) {
-      continue;
-    }
-
-    // Top level item
-    $class = '';
-    if ($i == 0) {
-      $class = 'first';
-    }
-    if ($i == count($blocks) - 1) {
-      $class = 'last';
-    }
-
-    $link = l($block['title'], 'admin/dashboard', array(
-      'html' => TRUE, // In case there are &amp; or &raquo; in the title
-      'fragment' => 'drawer-' . $drawer_counter,
-      'attributes' => array(
-        'class' => array('drawer-link'),
-      ),
-    ));
-    // TODO Please change this theme call to use an associative array for the $variables parameter.
-    $dashboard .= theme('menu_link', $link, FALSE, '', FALSE, $class);
-
-    // Drawer menu
-    $drawer_class = ($block['title'] == 'Core Content') ? 'core-content' : '';
-    $drawer .= '<ul id="drawer-' . $drawer_counter . '" class="drawer ' . $drawer_class . '">';
-    foreach ($block['content'] as $j => $k) {
-
-      if (empty($k)) {
+      if (empty($block['content'])) {
         continue;
       }
 
-      $class = '';
-      if ($j == 0) {
-        $class .= ' first';
+      // Top level item
+      $class = array();
+      if ($i == 0) {
+        $class[] = 'first';
       }
-      if ($j == count($block['content']) - 1) {
-        $class .= ' last';
-      }
-
-      // Content operations block
-      if ($k['operations']) {
-
-        $class .= ' operations';
-        $link = '<span class="operation-object">' . $k['title'] . ':</span>';
-        $ops = array();
-        foreach ($k['operations'] as $o) {
-
-          $ops[] = l($o['title'], $o['href'], $o['localized_options']);
-        }
-        $link .= implode('-', $ops);
-      }
-      else {
-
-        if (!isset($k['localized_options'])) {
-          $k['localized_options'] = array('attributes' => array());
-        }
-        if (!isset($k['localized_options']['attributes'])) {
-          $k['localized_options']['attributes'] = array();
-        }
-        if ($k['description']) {
-          $k['localized_options']['attributes']['title'] = $k['description'];
-        }
-        $link = l($k['title'], $k['href'], $k['localized_options']);
+      if ($i == count($blocks) - 1) {
+        $class[] = 'last';
       }
 
-      // TODO Please change this theme call to use an associative array for the $variables parameter.
-      $drawer .= theme('menu_link', $link, FALSE, '', FALSE, $class);
+      $menu['dashboard'][] = array(
+        '#theme' => 'menu_link',
+        '#title' => $block['title'],
+        '#href' => 'admin/dashboard',
+        '#localized_options' => array(
+          'html' => TRUE, // In case there are &amp; or &raquo; in the title
+          'fragment' => 'drawer-' . $drawer_counter,
+          'attributes' => array(
+            'class' => array('drawer-link'),
+          ),
+        ),
+        '#attributes' => array(
+          'class' => $class,
+        ),
+      );
+
+      // Drawer menu for block.
+      $drawer_class = ($block['title'] == 'Core Content') ? ' core-content' : '';
+      $block_drawer = array(
+        '#prefix' => '<ul id="drawer-' . $drawer_counter . '" class="drawer' . $drawer_class . '">',
+        '#suffix' => '</ul>',
+      );
+      foreach ($block['content'] as $j => $k) {
+        if (empty($k)) {
+          continue;
+        }
+
+        $class = array();
+        if ($j == 0) {
+          $class[] = 'first';
+        }
+        if ($j == count($block['content']) - 1) {
+          $class[] = 'last';
+        }
+
+        // Content operations block
+        if (isset($k['operations'])) {
+          $block_drawer[] = array(
+            '#theme' => 'ombu_toolbar_operations',
+            '#title' => $k['title'],
+            '#operations' => $k['operations'],
+            '#attributes' => array(
+              'class' => $class,
+            ),
+          );
+        }
+        else {
+          if (!isset($k['localized_options'])) {
+            $k['localized_options'] = array('attributes' => array());
+          }
+          if (!isset($k['localized_options']['attributes'])) {
+            $k['localized_options']['attributes'] = array();
+          }
+          if (isset($k['description'])) {
+            $k['localized_options']['attributes']['title'] = $k['description'];
+          }
+
+          $block_drawer[] = array(
+            '#theme' => 'menu_link',
+            '#title' => $k['title'],
+            '#href' => $k['href'],
+            '#localized_options' => $k['localized_options'],
+            '#attributes' => array(
+              'class' => $class,
+            ),
+          );
+        }
+      }
+      $drawer[] = $block_drawer;
+      $drawer_counter++;
     }
-    $drawer .= '</ul>';
-    $drawer_counter++;
   }
-  $menu .= '<ul id="toolbar-menu">' . $dashboard . '</ul>';
 
+  // Get the current path 
+  global $user;
+  $curr_path = base_path() . drupal_get_path_alias();
+  $variables['curr_path'] = $curr_path;
 
   // Add user items
-  $curr_path = base_path();
-  if ($_REQUEST['q']) {
-    $curr_path .= drupal_get_path_alias($_REQUEST['q']);
-  }
-  global $user;
-  $menu .= <<<EOT
-<ul id="toolbar-user">
-    <li class="account first"><a title="Edit account" href="/user/$user->uid/edit">Welcome <strong>$user->name</strong></a></li>
-    <li class=""><a href="/admin/dashboard">Dashboard</a></li>
-    <li class=""><a href="/">Visit Site</a></li>
-    <li class="logout"><a href="/logout">Log out</a></li>
-    <li class="last"><a class="toolbar-collapse-button" href="$curr_path" title="Collapse Toolbar">Collapse Toolbar</a></li>
-</ul>
-EOT;
+  $menu['user'] = array(
+    '#weight' => 100,
+    '#prefix' => '<ul id="toolbar-user">',
+    '#suffix' => '</ul>',
+    array(
+      array(
+        '#theme' => 'menu_link',
+        '#title' => 'Welcome <strong>' . $user->name . '</strong>',
+        '#href' => "user/$user->uid/edit",
+        '#localized_options' => array(
+          'html' => TRUE,
+          'attributes' => array(
+            'title' => 'Edit account',
+          ),
+        ),
+        '#attributes' => array(
+          'class' => array('account', 'first'),
+        ),
+      ),
+      array(
+        '#theme' => 'menu_link',
+        '#title' => 'Dashboard',
+        '#href' => 'admin/dashboard',
+        '#localized_options' => array(),
+      ),
+      array(
+        '#theme' => 'menu_link',
+        '#title' => 'Visit Site',
+        '#href' => '<front>',
+        '#localized_options' => array(),
+        '#attributes' => array(
+          'class' => array('visit-site'),
+        ),
+      ),
+      array(
+        '#theme' => 'menu_link',
+        '#title' => 'Log out',
+        '#href' => 'user/logout',
+        '#localized_options' => array(),
+        '#attributes' => array(
+          'class' => array('logout'),
+        ),
+      ),
+      array(
+        '#theme' => 'menu_link',
+        '#title' => 'Collapse Toolbar',
+        '#href' => $curr_path,
+        '#localized_options' => array(
+          'attributes' => array(
+            'class' => array('toolbar-collapse-button'),
+            'title' => 'Collapse Toolbar',
+          ),
+        ),
+        '#attributes' => array(
+          'class' => array('logout'),
+        ),
+      ),
+    ),
+  );
 
+  $variables['menu'] = $menu;
+  $variables['drawer'] = $drawer;
+
+  /*
   $css_src = base_path() . drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css';
   $css_js = <<<EOL
     var link = document.createElement('link');
@@ -603,36 +679,36 @@ EOT;
     document.getElementsByTagName("head")[0].appendChild(link);
 EOL;
   drupal_add_js($css_js, array('type' => 'inline', 'scope' => 'footer', 'cache' => FALSE));
-  drupal_add_js(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js', array('scope' => 'footer', 'cache' => FALSE));
+  */
+  drupal_add_css(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css');
+  drupal_add_js(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js');
 
-  return <<<EOT
-<div id="toolbar" class="toolbar overlay-displace-top clearfix toolbar-processed" style="display: none;">
-    <div class="toolbar-expanded-items clearfix">
-        <div class="toolbar-menu clearfix">
-            $menu
-        </div>
-        <div class="toolbar-drawer clearfix">
-            <div class="toolbar-shortcuts">
-                $drawer
-            </div>
-            <a href="#close" class="close-drawer">Close</a>
-        </div>
-        <div class="shadow"></div>
-    </div>
-    <div class="toolbar-collapsed-items clearfix">
-        <a class="toolbar-expand-button" title="Expand Toolbar" href="$curr_path">Expand Toolbar</a>
-    </div>
-</div>
-EOT;
+}
+
+/**
+ * Returns HTML for admin block operations for use within the ombutoolbar.
+ */
+function theme_ombu_toolbar_operations($variables) {
+  $title = $variables['title'];
+  $operations = $variables['operations'];
+  $attributes = $variables['attributes'];
+
+  $link = '<span class="operation-object">' . $title . ':</span>';
+  $ops = array();
+  foreach ($operations as $o) {
+    $ops[] = l($o['title'], $o['href'], $o['localized_options']);
+  }
+  $link .= implode('-', $ops);
+
+  return '<li' . drupal_attributes($attributes) . '>' . $link . '</li>';
 }
 
 /**
  * Implements hook_current_page_links().
  * @return mixed
- *      Array of link items or string of rendered html
+ *   Array of link items
  */
 function ombudashboard_current_page_links() {
-
   return NULL;
 }
 
@@ -700,14 +776,14 @@ function ombudashboard_find_node_validate($form_id, $form_state) {
 /**
  * @todo Please document this function.
  * @see http://drupal.org/node/1354
- */
+ *'/
 function ombudashboard_find_node_submit($form_id, $form_state) {
   drupal_goto('node/' . $form_state['values']['nid'] . '/edit');
 }
 
 
 /**
- * Autocomplete
+ * Autocomplete 
  */
 function ombudashboard_node_title_autocomplete($string) {
   $items = array();
