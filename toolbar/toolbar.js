@@ -22,7 +22,7 @@ Drupal.dashboardToolbar = {
         jQuery('#toolbar').show();
 
         // Initial collapsed/expanded State
-        if ( Drupal.settings.frontend && Drupal.dashboardToolbar.util.readCookie('dashboardToolbar.collapsed') == 1 ) {
+        if ( Drupal.settings.frontend && jQuery.cookie('dashboardToolbar.collapsed') == 1 ) {
             jQuery('.toolbar-collapsed-items').css('display', 'block');
             jQuery(window).trigger('toolbar.close', {init: true});
         } else {
@@ -31,7 +31,6 @@ Drupal.dashboardToolbar = {
             jQuery('html').addClass('dashboardToolbar');
         }
 
-        console.debug(Drupal.settings.backend);
         if (Drupal.settings.backend) {
             jQuery('#toolbar .toolbar-collapse-button').hide();
         } else {
@@ -197,11 +196,10 @@ Drupal.dashboardToolbar = {
 
             });
 
-            Drupal.dashboardToolbar.util.createCookie('dashboardToolbar.collapsed', 1);
+            jQuery.cookie('dashboardToolbar.collapsed', 1);
 
         // Expand Toolbar
         } else {
-
             jQuery('.toolbar-collapsed-items').slideUp(200, function() {
 
                 jQuery('.toolbar-expanded-items').slideDown(200);
@@ -210,47 +208,9 @@ Drupal.dashboardToolbar = {
 
             });
 
-            Drupal.dashboardToolbar.util.createCookie('dashboardToolbar.collapsed', 0);
-
+            jQuery.cookie('dashboardToolbar.collapsed', null);
         }
-
-    },
-
-    util: {
-
-        createCookie: function(name, value ,days) {
-
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime()+(days*24*60*60*1000));
-                var expires = "; expires="+date.toGMTString();
-            }
-            else var expires = "";
-            document.cookie = name+"="+value+expires+"; path=/";
-
-        },
-
-        readCookie: function(name) {
-
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-            }
-            return null;
-
-        },
-
-        eraseCookie: function(name) {
-
-            Drupal.dashboardToolbar.util.createCookie(name,"",-1);
-
-        }
-
     }
-
 };
 
 

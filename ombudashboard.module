@@ -244,8 +244,29 @@ function ombudashboard_views_api() {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Implements hook_library().
+ */
+function ombudashboard_library() {
+  $libraries['ombutoolbar'] = array(
+    'title' => 'OMBU Toolbar',
+    'js' => array(
+      drupal_add_js(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js'),
+    ),
+    'css' => array(
+      drupal_add_css(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css'),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery.cookie'),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Access callback.
+ *
+ * @return boolean
+ *   TRUE if user is user 1 (root)
  */
 function ombudashboard_user_is_system() {
   global $user;
@@ -669,20 +690,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
   $variables['menu'] = $menu;
   $variables['drawer'] = $drawer;
 
-  /*
-  $css_src = base_path() . drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css';
-  $css_js = <<<EOL
-    var link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '$css_src');
-    document.getElementsByTagName("head")[0].appendChild(link);
-EOL;
-  drupal_add_js($css_js, array('type' => 'inline', 'scope' => 'footer', 'cache' => FALSE));
-  */
-  drupal_add_css(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css');
-  drupal_add_js(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js');
-
+  drupal_add_library('ombudashboard', 'ombutoolbar');
 }
 
 /**
