@@ -37,6 +37,12 @@ Drupal.dashboardToolbar = {
             jQuery('#toolbar .visit-site').hide();
         }
 
+        // Force dashboard link to open new page, instead of in overlay.
+        jQuery('#toolbar a.dashboard').click(function() {
+          document.location = this.href;
+          return false;
+        });
+
         // Set Drawer close timer on toolbar hover
         jQuery('#toolbar:not(.toolbar-hover-processed)')
             .hover(

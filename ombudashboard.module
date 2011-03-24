@@ -657,7 +657,11 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#theme' => 'menu_link',
         '#title' => 'Dashboard',
         '#href' => 'admin/dashboard',
-        '#localized_options' => array(),
+        '#localized_options' => array(
+          'attributes' => array(
+            'class' => array('dashboard'),
+          ),
+        ),
         '#attributes' => array(),
         '#below' => array(),
       ),
