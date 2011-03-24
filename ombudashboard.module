@@ -249,11 +249,12 @@ function ombudashboard_views_api() {
 function ombudashboard_library() {
   $libraries['ombutoolbar'] = array(
     'title' => 'OMBU Toolbar',
+    'version' => '0.1',
     'js' => array(
-      drupal_add_js(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js'),
+      drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js' => array(),
     ),
     'css' => array(
-      drupal_add_css(drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css'),
+      drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery.cookie'),
@@ -509,6 +510,8 @@ function template_preprocess_ombu_toolbar(&$variables) {
           'class' => array('drawer-link'),
         ),
       ),
+      '#attributes' => array(),
+      '#below' => array(),
     );
 
     $this_page_links['#prefix'] = '<ul id="drawer-' . $drawer_counter . '" class="drawer">';
@@ -562,6 +565,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#attributes' => array(
           'class' => $class,
         ),
+        '#below' => array(),
       );
 
       // Drawer menu for block.
@@ -592,6 +596,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
             '#attributes' => array(
               'class' => $class,
             ),
+            '#below' => array(),
           );
         }
         else {
@@ -613,6 +618,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
             '#attributes' => array(
               'class' => $class,
             ),
+            '#below' => array(),
           );
         }
       }
@@ -645,12 +651,15 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#attributes' => array(
           'class' => array('account', 'first'),
         ),
+        '#below' => array(),
       ),
       array(
         '#theme' => 'menu_link',
         '#title' => 'Dashboard',
         '#href' => 'admin/dashboard',
         '#localized_options' => array(),
+        '#attributes' => array(),
+        '#below' => array(),
       ),
       array(
         '#theme' => 'menu_link',
@@ -660,6 +669,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#attributes' => array(
           'class' => array('visit-site'),
         ),
+        '#below' => array(),
       ),
       array(
         '#theme' => 'menu_link',
@@ -669,6 +679,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#attributes' => array(
           'class' => array('logout'),
         ),
+        '#below' => array(),
       ),
       array(
         '#theme' => 'menu_link',
@@ -683,6 +694,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#attributes' => array(
           'class' => array('logout'),
         ),
+        '#below' => array(),
       ),
     ),
   );
