@@ -72,27 +72,32 @@ function _ombudashboard_get_admin_blocks() {
  */
 function _ombudashboard_content_block() {
 	$content = array();
-	if ( user_access('create page content') ) {
-		$pages = array(
-				'title' => 'Pages',
-				'operations' => array(
-					array(
-						'title' => 'Add',
-						'href' => 'node/add/page',
-						'localized_options' => array(),
-					),
-				),
-			);
-		if ( user_access('delete any page content') ) {
-			$pages['operations'][] = array(
-				'title' => 'Manage',
-				'href' => 'admin/dashboard/manage-content/page',
-				'localized_options' => array(),
-			);
-		}
+  $types = array(
+    'page' => 'Pages',
+  );
+  foreach ($types as $type => $name) {
+    if (user_access('administer nodes') ||  user_access("create $type content") ) {
+      $pages = array(
+          'title' => $name,
+          'operations' => array(
+            array(
+              'title' => 'Add',
+              'href' => 'node/add/' . $type,
+              'localized_options' => array(),
+            ),
+          ),
+        );
+      if ( user_access('administer nodes') || user_access("delete any $type content") ) {
+        $pages['operations'][] = array(
+          'title' => 'Manage',
+          'href' => 'admin/dashboard/manage-content/' . $type,
+          'localized_options' => array(),
+        );
+      }
 
-		$content[] = $pages;
-	}
+      $content[] = $pages;
+    }
+  }
 
     return $content;
 }
@@ -168,7 +173,7 @@ function _ombudashboard_get_admin_nav_block() {
     $content = array(
         array(
             'title' => 'Manage the Site\'s Navigation Menu',
-            'href' => 'admin/build/menu-customize/menu-site-nav',
+            'href' => 'admin/structure/menu/manage/main-menu',
             'description' => 'Edit, enable and disable items from the site\'s menu',
             'localized_options' => array(),
         ),
@@ -186,7 +191,7 @@ function _ombudashboard_get_admin_categories_block() {
 
     $content[]  = array(
         'title' => 'Site Sections',
-        'href' => 'admin/content/taxonomy/1',
+        'href' => 'admin/structure/taxonomy/site-sections',
         'description' => 'Manage the site sections.',
         'localized_options' => array(
             'query' => drupal_get_destination(),
@@ -206,7 +211,7 @@ function _ombudashboard_get_supplementary_content_block() {
     if (user_access('administer blocks')) {
         $content[] = array(
             'title' => 'Site Blocks',
-            'href' => 'admin/build/block',
+            'href' => 'admin/structure/block',
             'localized_options' => array(),
             'description' => 'Advanced feature. Only use if familiar with it.',
         );
