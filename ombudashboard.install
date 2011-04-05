@@ -31,8 +31,8 @@ function ombudashboard_uninstall() {
  * @see http://drupal.org/node/1354
  */
 function ombudashboard_install() {
-  $strings = variable_get('locale_custom_strings_en', array());
-  $strings = array_merge($strings, array(
+  $strings = variable_get('locale_custom_strings_en', array('' => array()));
+  $strings[''] = array_merge($strings[''], array(
     'Bulk operations' => 'Bulk',
     'Delete node' => 'Delete',
     'Publish post' => 'Publish',
