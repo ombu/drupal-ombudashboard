@@ -114,23 +114,6 @@ function ombudashboard_user_login(&$edit, $account) {
 }
 
 /**
- * Implements hook_user_XXX().
- * @todo: roll this out into a hook_form_alter()
- */
-function ombudashboard_user_XXX($edit, $account) {
-  global $user;
-  // Site admin can only edit client users
-  if ($user->uid != $account->uid && in_array('site admin', $user->roles) && !in_array('client user', $account->roles)) {
-    drupal_goto('admin/user/user');
-  }
-
-  // deployment managers can only edit client users & site admins
-  if ($user->uid != $account->uid && in_array('deployment manager', $user->roles) && !( in_array('client user', $account->roles) || in_array('site admin', $account->roles) )) {
-    drupal_goto('admin/user/user');
-  }
-}
-
-/**
  * Implements hook_admin_paths_alter().
  */
 function ombudashboard_admin_paths_alter(&$paths) {
