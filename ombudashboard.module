@@ -114,29 +114,12 @@ function ombudashboard_user_login(&$edit, $account) {
 }
 
 /**
- * Implements hook_user_XXX().
- * @todo: roll this out into a hook_form_alter()
- */
-function ombudashboard_user_XXX($edit, $account) {
-  global $user;
-  // Site admin can only edit client users
-  if ($user->uid != $account->uid && in_array('site admin', $user->roles) && !in_array('client user', $account->roles)) {
-    drupal_goto('admin/user/user');
-  }
-
-  // deployment managers can only edit client users & site admins
-  if ($user->uid != $account->uid && in_array('deployment manager', $user->roles) && !( in_array('client user', $account->roles) || in_array('site admin', $account->roles) )) {
-    drupal_goto('admin/user/user');
-  }
-}
-
-/**
  * Implements hook_admin_paths_alter().
  */
 function ombudashboard_admin_paths_alter(&$paths) {
   // Treat all user pages as administrative.
-  //$paths['user'] = TRUE;
-  //$paths['user/*'] = TRUE;
+  $paths['user'] = TRUE;
+  $paths['user/*'] = TRUE;
 }
 
 /**
@@ -478,23 +461,30 @@ function template_preprocess_ombu_toolbar(&$variables) {
 
   // Build local tasks links.
   $this_page_links = array();
-  // Allow other modules to add local links to toolbar.
-  foreach (module_invoke_all('current_page_links') as $l) {
-    if (!isset($l['#localized_options'])) {
-      $l['#localized_options'] = array();
-    }
-    $this_page_links[] = array(
-      '#theme' => 'menu_local_task',
-      '#link' => $l,
-    );
-  }
 
   // Pull in default Drupal primary and secondary local tasks.
   if ($primary_local_tasks = menu_primary_local_tasks()) {
-    $this_page_links = $primary_local_tasks + $this_page_links;
+    $this_page_links[] = $primary_local_tasks;
   }
   if ($secondary_local_tasks = menu_secondary_local_tasks()) {
-    $this_page_links += $secondary_local_tasks;
+    $this_page_links[] = $secondary_local_tasks;
+  }
+
+  // Allow other modules to add local links to toolbar.
+  foreach (module_invoke_all('current_page_links') as $l) {
+    if (is_array($l)) {
+      if (!isset($l['#theme'])) {
+        $l['#theme'] = 'menu_local_task';
+      }
+      $this_page_links[] = $l;
+    }
+    else {
+      $this_page_links[] = array(
+        '#theme' => 'menu_local_task',
+        '#link' => $l,
+        '#localized_options' => array(),
+      );
+    }
   }
   if (!empty($this_page_links)) {
     $menu['this_page'] = array(
