@@ -83,7 +83,7 @@ function _ombudashboard_content_block() {
         'operations' => array(
           array(
             'title' => 'Add',
-            'href' => 'node/add/' . $type,
+            'href' => 'node/add/' . str_replace('_', '-', $type),
             'localized_options' => array(),
           ),
         ),
