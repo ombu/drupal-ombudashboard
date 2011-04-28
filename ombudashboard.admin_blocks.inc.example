@@ -207,6 +207,11 @@ function _ombudashboard_get_admin_categories_block() {
 function _ombudashboard_get_supplementary_content_block() {
   $content = array();
 
+  module_load_include('php', 'ombudashboard', 'supplementary_content.inc');
+  foreach(ombudashboard_get_supplementary_content_list() as $i => $obj) {
+    $content[] = $obj;
+  }
+
   if (user_access('administer blocks')) {
     $content[] = array(
       'title' => 'Site Blocks',
@@ -214,11 +219,6 @@ function _ombudashboard_get_supplementary_content_block() {
       'localized_options' => array(),
       'description' => 'Advanced feature. Only use if familiar with it.',
     );
-  }
-
-  module_load_include('php', 'ombudashboard', 'supplementary_content.inc');
-  foreach(ombudashboard_get_supplementary_content_list() as $i => $obj) {
-    $content[] = $obj;
   }
 
   return $content;
