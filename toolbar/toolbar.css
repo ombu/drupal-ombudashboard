@@ -41,10 +41,15 @@ html.dashboardToolbar {
   font: normal 0.9em "Lucida Grande", Verdana, sans-serif;
   color: #ccc;
   position: fixed;
-  left: 0;
   right: 0;
   top: 0;
   z-index: 3000;
+  width: 24px;
+  float:right;
+}
+.dashboardToolbar #toolbar {
+	width: 100%;
+	float:none;
 }
 
 #toolbar .toolbar-expanded-items {
