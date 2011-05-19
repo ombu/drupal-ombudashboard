@@ -153,6 +153,12 @@ function _ombudashboard_get_admin_block3() {
       'description' => 'Add, remove, and manage site users',
       'localized_options' => array(),
     );
+    $content[] = array(
+      'title' => 'Create User',
+      'href' => 'admin/people/create',
+      'description' => 'Add a site user',
+      'localized_options' => array(),
+    );
   }
 
   if ( user_access('configure ombu site') ) {
