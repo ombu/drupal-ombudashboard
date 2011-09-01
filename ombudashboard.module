@@ -108,9 +108,6 @@ function ombudashboard_user_login(&$edit, $account) {
   if (user_access('access the dashboard page')) {
     $_GET['destination'] = 'admin/dashboard';
   }
-  elseif (!$_GET['destination']) {
-    drupal_goto('<front>');
-  }
 }
 
 /**
