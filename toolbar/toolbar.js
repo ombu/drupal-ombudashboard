@@ -258,6 +258,7 @@ Drupal.dashboardToolbar = {
       }
       $(window).trigger('toolbar.close', {init: false});
       $.cookie('dashboardToolbar.open', 0);
+      this.closeDrawer();
     }
 };
 
