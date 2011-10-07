@@ -14,11 +14,9 @@
             <div class="toolbar-shortcuts">
               <?php print render($drawer) ?>
             </div>
-            <a href="#close" class="close-drawer">Close</a>
+            <a href="#close" class="close-drawer">&otimes;</a>
         </div>
         <div class="shadow"></div>
     </div>
-    <div class="toolbar-collapsed-items clearfix">
-      <a class="toolbar-expand-button" title="Expand Toolbar" href="<?php print $curr_path ?>">Expand Toolbar</a>
-    </div>
+    <a class="toolbar-expand-button" title="Expand Toolbar" href="<?php print $curr_path ?>">&equiv;</a>
 </div>
