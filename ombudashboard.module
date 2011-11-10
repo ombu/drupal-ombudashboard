@@ -105,7 +105,7 @@ function ombudashboard_permission() {
  */
 function ombudashboard_user_login(&$edit, $account) {
   // Redirect to Dashboard if they have permissions
-  if (user_access('access the dashboard page')) {
+  if (!ombudashboard_user_is_system() && user_access('access the dashboard page')) {
     $_GET['destination'] = 'admin/dashboard';
   }
 }
@@ -614,7 +614,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
     }
   }
 
-  // Get the current path 
+  // Get the current path
   global $user;
   $curr_path = base_path() . drupal_get_path_alias();
   $variables['curr_path'] = $curr_path;
@@ -794,7 +794,7 @@ function ombudashboard_find_node_submit($form_id, $form_state) {
 
 
 /**
- * Autocomplete 
+ * Autocomplete
  */
 function ombudashboard_node_title_autocomplete($string) {
   $items = array();
