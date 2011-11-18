@@ -115,8 +115,10 @@ function ombudashboard_user_login(&$edit, $account) {
  */
 function ombudashboard_admin_paths_alter(&$paths) {
   // Treat all user pages as administrative.
-  $paths['user'] = TRUE;
-  $paths['user/*'] = TRUE;
+  if (variable_get('ombudashboard_user_admin_theme', FALSE)) {
+    $paths['user'] = TRUE;
+    $paths['user/*'] = TRUE;
+  }
 }
 
 /**
