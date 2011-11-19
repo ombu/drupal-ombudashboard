@@ -543,7 +543,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
       $menu['dashboard'][] = array(
         '#theme' => 'menu_link',
         '#title' => $block['title'],
-        '#href' => 'admin/dashboard',
+        '#href' => isset($block['href']) ?  $block['href'] : 'admin/dashboard',
         '#localized_options' => array(
           'html' => TRUE, // In case there are &amp; or &raquo; in the title
           'fragment' => 'drawer-' . $drawer_counter,
