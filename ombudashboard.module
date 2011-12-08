@@ -199,9 +199,6 @@ function ombudashboard_preprocess_page(&$vars) {
     if ($_GET['q'] == 'admin/dashboard' || $user->uid == 0) {
       $vars['breadcrumb'] = '';
     }
-    else {
-      $vars['breadcrumb'] = '<div class="breadcrumb">' . l('&laquo; Back to Dashboard', 'admin/dashboard', array('html' => TRUE)) . '</div>';
-    }
   }
 }
 
@@ -329,9 +326,7 @@ function theme_dashboard_page($variables) {
     }
   }
 
-  $output = '<div class="admin clear-block">';
-  $output .= '<div class="compact-link">';
-  $output .= '</div>';
+  $output = '<div class="admin clearfix">';
 
   foreach ($container as $id => $data) {
     $output .= '<div class="' . $id . ' clear-block">';
@@ -417,14 +412,13 @@ function theme_ombu_admin_block_content($variables) {
     return '';
   }
 
-  $output = '<ul class="admin-list">';
+  $output = '<dl class="admin-list">';
   foreach ($content as $item) {
 
     if (empty($item)) {
       continue;
     }
 
-    $output .= '<li>';
     if (isset($item['operations'])) {
       $t = str_replace('&', 'and', $item['title']);
       $output .= '<dt class="' . $item['type'] . '">';
@@ -444,9 +438,8 @@ function theme_ombu_admin_block_content($variables) {
     if (isset($item['description'])) {
       $output .= '<dd>' . $item['description'] . '</dd>';
     }
-    $output .= '</li>';
   }
-  $output .= '</ul>';
+  $output .= '</dl>';
   return $output;
 }
 
