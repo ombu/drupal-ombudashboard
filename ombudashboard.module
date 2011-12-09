@@ -166,9 +166,8 @@ JS;
     }
   }
 
-  // Add Toolbar
-  // Disable toolbar for now and use D7 default toolbar.
-  if (user_access('show dashboard toolbar')) {
+  // Add Toolbar. Don't show when on a media overlay.
+  if (user_access('show dashboard toolbar') && $page['#theme'] != 'media_dialog_page') {
     $page['page_bottom']['ombu_toolbar'] = array(
       '#theme' => 'ombu_toolbar',
     );
