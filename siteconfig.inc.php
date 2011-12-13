@@ -50,13 +50,14 @@ function ombudashboard_siteconfig($op, $form) {
         );
 
         // Google Analytics
-        $form['analytics'] = array(
+        $form['services'] = array(
             '#type' => 'fieldset',
-            '#title' => t('Google Analytics Key'),
+            '#title' => t('Services'),
             '#collapsible' => TRUE,
             '#collapsed' => TRUE,
         );
-        $form['analytics']['google_analytics_key'] = array(
+        $form['services']['google_analytics_key'] = array(
+            '#title' => t('Google Analytics Key'),
             '#type' => 'textfield',
             '#default_value' => variable_get('google_analytics_key', ''),
             '#description' => 'Google Analytics will be used if this key is provided. <em>Ex Key: "UA-1234567-89"</em>',

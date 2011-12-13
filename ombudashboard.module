@@ -328,7 +328,7 @@ function theme_dashboard_page($variables) {
   $output = '<div class="admin clearfix">';
 
   foreach ($container as $id => $data) {
-    $output .= '<div class="' . $id . ' clear-block">';
+    $output .= '<div class="' . $id . '">';
     $output .= $data;
     $output .= '</div>';
   }
