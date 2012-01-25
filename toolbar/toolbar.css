@@ -151,6 +151,9 @@
 #toolbar .toolbar-drawer .drawer {
   display: none;
 }
+#toolbar .toolbar-drawer li {
+  color: #ccc;
+}
 #toolbar .toolbar-drawer a.close-drawer {
   right: 13px;
   top: 2px;
