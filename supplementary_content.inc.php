@@ -94,7 +94,7 @@ function ombudashboard_supplementary_content_callback_save($form, $form_state) {
 /**
  * Implementation of hook_supplementary_content().
  *
- * Show simple edit form for blocks.  Blocks will be displayed if module/delta 
+ * Show simple edit form for blocks.  Blocks will be displayed if module/delta
  * is set in the block_simple_ui variable.
  */
 function ombudashboard_supplementary_content($op, $delta = NULL, $edit = NULL) {
@@ -127,8 +127,8 @@ function ombudashboard_supplementary_content($op, $delta = NULL, $edit = NULL) {
             $block = block_load($block['module'], $block['delta']);
             $info = module_invoke($block->module, 'block_info');
 
-            // #tree behaviour is broken in D7: children elements with #tree set 
-            // to FALSE will break out of the tree.  So #parents needs to be set 
+            // #tree behaviour is broken in D7: children elements with #tree set
+            // to FALSE will break out of the tree.  So #parents needs to be set
             // instead.
             // @see http://drupal.org/node/759222
             if (!isset($form['blocks'][$block->module])) {
@@ -177,20 +177,22 @@ function ombudashboard_supplementary_content($op, $delta = NULL, $edit = NULL) {
       break;
 
     case 'save':
-      // Save each block.
-      foreach ($edit['blocks'] as $module => $deltas) {
-        foreach ($deltas as $delta => $values) {
-          db_update('block')
-            ->fields(array(
-              'title' => $values['title'],
-            ))
-            ->condition('module', $module)
-            ->condition('delta', $delta)
-            ->execute();
-          module_invoke($module, 'block_save', $delta, $values);
+      if ($delta == 'blocks') {
+        // Save each block.
+        foreach ($edit['blocks'] as $module => $deltas) {
+          foreach ($deltas as $delta => $values) {
+            db_update('block')
+              ->fields(array(
+                'title' => $values['title'],
+              ))
+              ->condition('module', $module)
+              ->condition('delta', $delta)
+              ->execute();
+            module_invoke($module, 'block_save', $delta, $values);
+          }
         }
+        drupal_set_message(t('The block configuration has been saved.'));
       }
-      drupal_set_message(t('The block configuration has been saved.'));
       break;
   }
 }
