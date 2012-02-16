@@ -151,6 +151,15 @@
 #toolbar .toolbar-drawer .drawer {
   display: none;
 }
+#toolbar .toolbar-drawer .drawer.core-content li {
+  margin-right: 18px;
+}
+#toolbar .toolbar-drawer .drawer.core-content li .operation-object {
+  font-weight: bold;
+}
+#toolbar .toolbar-drawer .drawer.core-content li a {
+  margin-right: 0;
+}
 #toolbar .toolbar-drawer li {
   color: #ccc;
 }
@@ -181,7 +190,8 @@
 #toolbar div.toolbar-shortcuts ul li a {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  padding: 5px 5px 5px 5px;
+  border-radius: 5px;
+  padding: 5px;
   margin-right: 5px;
 }
 #toolbar div.toolbar-shortcuts ul li a:focus, #toolbar div.toolbar-shortcuts ul li a:hover, #toolbar div.toolbar-shortcuts ul li a.active:focus {

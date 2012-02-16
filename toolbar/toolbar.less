@@ -166,6 +166,17 @@
 
     .drawer {
         display: none;
+        &.core-content {
+          li {
+            margin-right: 18px;
+            .operation-object {
+              font-weight:bold;
+            }
+            a {
+              margin-right:0;
+            }
+          }
+        }
     }
 
     li {
@@ -209,7 +220,8 @@
       li a {
         -moz-border-radius: 5px;
         -webkit-border-radius: 5px;
-        padding: 5px 5px 5px 5px;
+        border-radius: 5px;
+        padding: 5px;
         margin-right: 5px;
 
         &:focus,
