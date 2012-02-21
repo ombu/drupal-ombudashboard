@@ -71,7 +71,7 @@ function ombudashboard_supplementary_form($form, $form_state, $delta) {
     $list = module_invoke_all('supplementary_content', 'list', NULL, NULL);
     drupal_set_title($list[$delta]['title']);
 
-    $form = module_invoke_all('supplementary_content', 'form', $delta, NULL);
+    $form = module_invoke_all('supplementary_content', 'form', $delta, $form_state);
     $form['#delta'] = $delta;
     // Check if supplementary content will handle own submission
     if (!isset($list[$delta]['handle own submission'])) {
