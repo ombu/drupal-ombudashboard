@@ -33,7 +33,7 @@ function coreContentDropdown() {
 	});
 
 	types.hide();
-	operations.hide().children('a').addClass('button');
+	operations.hide().children('a').addClass('btn');
 
 	jQuery('#core-content-operations').prepend(s);
 

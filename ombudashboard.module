@@ -371,7 +371,7 @@ function theme_ombu_admin_block_content_manage($variables) {
   }
 
   $output .= '<ul class="admin-list">';
-  $output .= '<li id="core-content-operations"><dl>';
+  $output .= '<li id="core-content-operations"><dl class="btn-group">';
   foreach ($content as $item) {
 
     if (empty($item)) {
@@ -731,6 +731,7 @@ function ombudashboard_content_edit($type, $label) {
           'title' => 'Add',
           'href' => 'node/add/' . str_replace("_", "-", $type),
           'localized_options' => array(),
+          'attributes' => array( 'class' =>  'foo'),
         ),
       ),
     );
