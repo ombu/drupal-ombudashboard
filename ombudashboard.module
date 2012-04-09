@@ -411,16 +411,13 @@ function theme_ombu_admin_block_content($variables) {
     return '';
   }
 
-  $output = '<div class="admin-list btn-group">';
+  $output = '<dl class="admin-list">';
   foreach ($content as $item) {
 
     if (empty($item)) {
       continue;
     }
     $item['localized_options']['attributes']['class'][] = 'btn btn-mini';
-    if (isset($item['description'])) {
-      $item['localized_options']['attributes']['title'] = $item['description'];
-    }
     if (isset($item['operations'])) {
       $t = str_replace('&', 'and', $item['title']);
       $output .= '<dt class="' . $item['type'] . '">';
@@ -435,10 +432,13 @@ function theme_ombu_admin_block_content($variables) {
       $output .= '</dt>';
     }
     else {
-      $output .= l($item['title'], $item['href'], $item['localized_options']);
+      $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
+    }
+    if (isset($item['description'])) {
+      $output .= '<dd>' . $item['description'] . '</dd>';
     }
   }
-  $output .= '</div>';
+  $output .= '</dl>';
   return $output;
 }
 
