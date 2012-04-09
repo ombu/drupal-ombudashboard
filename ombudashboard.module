@@ -417,7 +417,7 @@ function theme_ombu_admin_block_content($variables) {
     if (empty($item)) {
       continue;
     }
-    $item['localized_options']['attributes']['class'][] = 'btn btn-mini';
+    $item['localized_options']['attributes']['class'][] = 'btn btn-small';
     if (isset($item['operations'])) {
       $t = str_replace('&', 'and', $item['title']);
       $output .= '<dt class="' . $item['type'] . '">';
