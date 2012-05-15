@@ -370,11 +370,18 @@ function theme_ombu_admin_block_content_manage($variables) {
     return $output;
   }
 
+  $plain_items = array();
+
   $output .= '<ul class="admin-list">';
   $output .= '<li id="core-content-operations"><dl class="btn-group">';
   foreach ($content as $item) {
 
     if (empty($item)) {
+      continue;
+    }
+
+    if (!isset($item['operations'])) {
+      $plain_items[] = $item;
       continue;
     }
 
@@ -398,6 +405,9 @@ function theme_ombu_admin_block_content_manage($variables) {
   $form = drupal_get_form('ombudashboard_find_node');
   $output .= drupal_render($form);
   $output .= '<div class="description">Find content by title.</div></li></ul>';
+
+  $output .= theme('ombu_admin_block_content', array('content' => $plain_items));
+
   return $output;
 }
 
