@@ -109,7 +109,7 @@ Drupal.dashboardToolbar = {
 
             var s = document.createElement('select');
             s.className = "form-select";
-            addOption(s, 'null', '-- Choose a type of content --');
+            addOption(s, 'null', '- Choose a type of content -');
             items.each( function(i) {
                 addOption(s, i, $('.operation-object', this).text().replace(':', ''));
                 $('.operation-object', this).hide();

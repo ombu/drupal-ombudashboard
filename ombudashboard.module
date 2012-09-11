@@ -373,7 +373,7 @@ function theme_ombu_admin_block_content_manage($variables) {
   $plain_items = array();
 
   $output .= '<ul class="admin-list">';
-  $output .= '<li id="core-content-operations"><dl class="btn-group">';
+  $output .= '<li id="core-content-operations"><dl>';
   foreach ($content as $item) {
 
     if (empty($item)) {
@@ -390,8 +390,9 @@ function theme_ombu_admin_block_content_manage($variables) {
       $class = isset($item['type']) ? ' class="' . $item['type'] . '"' : '';
       $output .= '<dt' . $class . '>' . $t . '</dt>';
 
-      $output .= '<dd' . $class . '>';
+      $output .= '<dd class="btn-group">';
       foreach ($item['operations'] as $key => $op) {
+        $op['localized_options']['attributes']['class'][] = 'btn';
         $output .= ' ' . l($op['title'], $op['href'], $op['localized_options']);
       }
       $output .= "</dd>";
