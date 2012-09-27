@@ -219,9 +219,7 @@ Drupal.dashboardToolbar = {
             toolbar: {
               top: 0
             },
-            html: {
-              'padding-top': this.$toolbar.data('toolbarHeight')+'px'
-            }
+            html: {}
           };
       if (noAnimation) {
         this.$toolbar.css(opts.toolbar);
@@ -241,9 +239,6 @@ Drupal.dashboardToolbar = {
       var opts = {
             toolbar: {
               top: '-'+this.$toolbar.data('toolbarHeight')+'px'
-            },
-            html: {
-              'padding-top': 0
             }
           };
       if (noAnimation) {
