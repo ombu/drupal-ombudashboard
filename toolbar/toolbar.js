@@ -239,7 +239,8 @@ Drupal.dashboardToolbar = {
       var opts = {
             toolbar: {
               top: '-'+this.$toolbar.data('toolbarHeight')+'px'
-            }
+            },
+            html: {}
           };
       if (noAnimation) {
         this.$toolbar.css(opts.toolbar);
