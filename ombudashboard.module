@@ -44,6 +44,13 @@ function ombudashboard_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'supplementary_content.inc.php',
   );
+  $items['admin/dashboard/clear-caches'] = array(
+    'title' => 'Clear Caches',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ombudashboard_clear_caches'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ombudashboard.admin.inc',
+  );
 
   return $items;
 }

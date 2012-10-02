@@ -170,6 +170,15 @@ function _ombudashboard_get_admin_block3() {
     );
   }
 
+  if ( user_access('administer site configuration') ) {
+    $content[] = array(
+      'title' => 'Clear Caches',
+      'href' => 'admin/dashboard/clear-caches',
+      'description' => 'Clear site caches',
+      'localized_options' => array(),
+    );
+  }
+
   return $content;
 }
 
