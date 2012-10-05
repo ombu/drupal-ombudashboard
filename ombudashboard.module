@@ -112,7 +112,7 @@ function ombudashboard_permission() {
  */
 function ombudashboard_user_login(&$edit, $account) {
   // Redirect to Dashboard if they have permissions
-  if (!ombudashboard_user_is_system() && user_access('access the dashboard page')) {
+  if (!ombudashboard_user_is_system() && user_access('access the dashboard page') && arg(1) != 'reset') {
     $_GET['destination'] = 'admin/dashboard';
   }
 }
