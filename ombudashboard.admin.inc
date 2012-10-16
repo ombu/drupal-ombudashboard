@@ -46,7 +46,7 @@ function ombudashboard_batch_clear_caches() {
     'init_message' => t('Preparing to clear caches..'),
     'progress_message' => t('Clearing caches..'),
     'error_message' => t('There was a problem with clearing caches.'),
-    'file' => drupal_get_path('module', 'ombudashboard') . '/ombudashboard.pages.inc',
+    'file' => drupal_get_path('module', 'ombudashboard') . '/ombudashboard.admin.inc',
   );
   batch_set($batch);
 }
