@@ -189,6 +189,26 @@ JS;
     drupal_add_js(array('backend' => FALSE, 'frontend' => TRUE), array('type' => 'setting', 'scope' => 'footer'));
   }
 
+  // Add environment indicator on all environments except production.
+  $environment = variable_get('environment', 'development');
+  if ($environment != 'production') {
+    $environment = $environment == 'development' ? 'dev' : $environment;
+    $page['page_bottom']['environment_indicator'] = array(
+      '#markup' => "
+        <div class=\"ribbon\">
+            <div>
+              $environment
+            </div>
+        </div>
+      ",
+      '#attached' => array(
+        'css' => array(
+          drupal_get_path('module', 'ombudashboard') . '/css/ribbon.css',
+        ),
+      ),
+    );
+  }
+
   return $out;
 }
 
