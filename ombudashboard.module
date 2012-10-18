@@ -195,7 +195,7 @@ JS;
     $environment = $environment == 'development' ? 'dev' : $environment;
     $page['page_bottom']['environment_indicator'] = array(
       '#markup' => "
-        <div class=\"ribbon\">
+        <div id=\"ribbon\">
             <div>
               $environment
             </div>
