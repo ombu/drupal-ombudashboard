@@ -3,32 +3,26 @@
  * Refactored from : http://saltstack.org/
  */
 
-@color1: red;
-@color2: darken(@color1, 10%);
+@color1: #BFDC7A;
+@color2: darken(@color1, 20%);
+@width: 180px;
 @zindexModal:             1050;
 
 #ribbon {
     z-index: @zindexModal;
-    width: 85px;
-    height: 88px;
-    overflow: hidden;
     position: fixed;
     top: 0px;
-    right: 0px;
+    width: @width;
+    height: @width;
+    overflow: hidden;
     > div {
         font: bold 15px Sans-Serif;
         text-align: center;
         text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
-        -webkit-transform: rotate(45deg);
-        -moz-transform:    rotate(45deg);
-        -ms-transform:     rotate(45deg);
-        -o-transform:      rotate(45deg);
         position: relative;
+        top: 33px;
+        width: @width;
         padding: 7px 0;
-        left: -5px;
-        top: 15px;
-        width: 120px;
-        color: white;
         background-color: @color1;
         background-image: -webkit-gradient(linear, left top, left bottom,
         from(@color1), to(@color2));
@@ -39,7 +33,10 @@
         -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
         -moz-box-shadow:    0px 0px 3px rgba(0,0,0,0.3);
         box-shadow:         0px 0px 3px rgba(0,0,0,0.3);
-
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
         &:before, &:after {
             content: "";
             border-top:   3px solid #6e8900;
@@ -62,4 +59,26 @@
             text-decoration: none;
         }
     }
+}
+
+#ribbon.right {
+    right: 0px;
+    > div {
+        -webkit-transform: rotate(45deg);
+        -moz-transform:    rotate(45deg);
+        -ms-transform:     rotate(45deg);
+        -o-transform:      rotate(45deg);
+        left: 42px;
+    }
+}
+
+#ribbon.left {
+    left: 0px;
+    > div {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform:    rotate(-45deg);
+        -ms-transform:     rotate(-45deg);
+        -o-transform:      rotate(-45deg);
+        left: -42px;
+   }
 }

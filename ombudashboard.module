@@ -195,7 +195,7 @@ JS;
     $environment = $environment == 'development' ? 'dev' : $environment;
     $page['page_bottom']['environment_indicator'] = array(
       '#markup' => "
-        <div id=\"ribbon\">
+        <div id=\"ribbon\" class=\"right\">
             <div>
               $environment
             </div>
@@ -204,6 +204,9 @@ JS;
       '#attached' => array(
         'css' => array(
           drupal_get_path('module', 'ombudashboard') . '/css/ribbon.css',
+        ),
+        'js' => array(
+          drupal_get_path('module', 'ombudashboard') . '/js/ribbon.js',
         ),
       ),
     );

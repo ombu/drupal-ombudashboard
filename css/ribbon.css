@@ -4,36 +4,33 @@
  */
 #ribbon {
   z-index: 1050;
-  width: 85px;
-  height: 88px;
-  overflow: hidden;
   position: fixed;
   top: 0px;
-  right: 0px;
+  width: 180px;
+  height: 180px;
+  overflow: hidden;
 }
 #ribbon > div {
   font: bold 15px Sans-Serif;
   text-align: center;
   text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
   position: relative;
+  top: 33px;
+  width: 180px;
   padding: 7px 0;
-  left: -5px;
-  top: 15px;
-  width: 120px;
-  color: white;
-  background-color: #ff0000;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ff0000), to(#cc0000));
-  background-image: -webkit-linear-gradient(top, #ff0000, #cc0000);
-  background-image: -moz-linear-gradient(top, #ff0000, #cc0000);
-  background-image: -ms-linear-gradient(top, #ff0000, #cc0000);
-  background-image: -o-linear-gradient(top, #ff0000, #cc0000);
+  background-color: #bfdc7a;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bfdc7a), to(#95be32));
+  background-image: -webkit-linear-gradient(top, #bfdc7a, #95be32);
+  background-image: -moz-linear-gradient(top, #bfdc7a, #95be32);
+  background-image: -ms-linear-gradient(top, #bfdc7a, #95be32);
+  background-image: -o-linear-gradient(top, #bfdc7a, #95be32);
   -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 #ribbon > div:before,
 #ribbon > div:after {
@@ -51,6 +48,26 @@
   right: 0;
 }
 #ribbon > div a {
-  color: #000000;
+  color: #364512;
   text-decoration: none;
+}
+#ribbon.right {
+  right: 0px;
+}
+#ribbon.right > div {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  left: 42px;
+}
+#ribbon.left {
+  left: 0px;
+}
+#ribbon.left > div {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  left: -42px;
 }
