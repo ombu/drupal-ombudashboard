@@ -498,7 +498,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
   if (!empty($this_page_links)) {
     $menu['this_page'] = array(
       '#weight' => -10,
-      '#prefix' => '<ul id="toolbar-local">',
+      '#prefix' => '<ul class="nav">',
       '#suffix' => '</ul>',
       '#theme' => 'menu_link',
       '#title' => 'This Page',
@@ -513,7 +513,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
       '#below' => array(),
     );
 
-    $this_page_links['#prefix'] = '<ul id="drawer-' . $drawer_counter . '" class="drawer">';
+    $this_page_links['#prefix'] = '<ul id="drawer-' . $drawer_counter . '" class="dropdown-menu">';
     $this_page_links['#suffix'] = '</ul>';
     $drawer['this_page'] = $this_page_links;
 
@@ -532,7 +532,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
   $blocks = _ombudashboard_get_admin_blocks();
   if ($blocks) {
     $menu['dashboard'] = array(
-      '#prefix' => '<ul id="toolbar-menu">',
+      '#prefix' => '<ul class="nav">',
       '#suffix' => '</ul>',
     );
     foreach ($blocks as $i => $block) {
@@ -570,7 +570,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
       // Drawer menu for block.
       $drawer_class = ($block['title'] == 'Core Content') ? ' core-content' : '';
       $block_drawer = array(
-        '#prefix' => '<ul id="drawer-' . $drawer_counter . '" class="drawer' . $drawer_class . '">',
+        '#prefix' => '<ul id="drawer-' . $drawer_counter . '" class="dropdown-menu' . $drawer_class . '">',
         '#suffix' => '</ul>',
       );
       foreach ($block['content'] as $j => $k) {
@@ -634,7 +634,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
   // Add user items
   $menu['user'] = array(
     '#weight' => 100,
-    '#prefix' => '<ul id="toolbar-user">',
+    '#prefix' => '<ul class="nav">',
     '#suffix' => '</ul>',
     array(
       array(

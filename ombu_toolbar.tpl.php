@@ -5,18 +5,19 @@
  *
  */
 ?>
-<div id="toolbar" class="toolbar overlay-displace-top clearfix toolbar-processed" style="display: none;">
-    <div class="toolbar-expanded-items clearfix">
-        <div class="toolbar-menu clearfix">
-          <?php print render($menu) ?>
-        </div>
-        <div class="toolbar-drawer clearfix">
-            <div class="toolbar-shortcuts">
+<div class="navbar navbar-inverse navbar-fixed-top overlay-displace-top">
+    <div class="navbar-inner">
+        <!-- <div class="container"> Needed when going to a responsive navbar -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-targe=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a href="/" class="brand">Menu</a>
+            <div class="nav-collapse">
+              <?php print render($menu) ?>
               <?php print render($drawer) ?>
             </div>
-            <a href="#close" class="close-drawer">&otimes;</a>
-        </div>
-        <div class="shadow"></div>
+        <!-- </div> -->
     </div>
-    <a class="toolbar-expand-button" title="Expand Toolbar" href="<?php print $curr_path ?>">&equiv;</a>
 </div>
