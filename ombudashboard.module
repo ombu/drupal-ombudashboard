@@ -239,7 +239,7 @@ function ombudashboard_library() {
       drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css' => array(),
+      drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar-new.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery.cookie'),
@@ -645,6 +645,9 @@ function template_preprocess_ombu_toolbar(&$variables) {
           'html' => TRUE,
           'attributes' => array(
             'title' => 'Edit account',
+            'class' => 'icon-user icon-white',
+            'rel' => 'tooltip',
+            'data-placement' => 'bottom',
           ),
         ),
         '#attributes' => array(
@@ -658,7 +661,10 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#href' => 'admin/dashboard',
         '#localized_options' => array(
           'attributes' => array(
-            'class' => array('dashboard'),
+            'class' => array('icon-cog icon-white'),
+            'title' => 'Site Dashboard',
+            'rel' => 'tooltip',
+            'data-placement' => 'bottom',
           ),
         ),
         '#attributes' => array(),
@@ -670,7 +676,10 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#href' => '<front>',
         '#localized_options' => array(),
         '#attributes' => array(
-          'class' => array('visit-site'),
+          'class' => array('icon-home icon-white'),
+          'title' => 'Site Homepage',
+          'rel' => 'tooltip',
+          'data-placement' => 'bottom',
         ),
         '#below' => array(),
       ),
@@ -680,7 +689,10 @@ function template_preprocess_ombu_toolbar(&$variables) {
         '#href' => 'user/logout',
         '#localized_options' => array(),
         '#attributes' => array(
-          'class' => array('logout'),
+          'class' => array('icon-off icon-white'),
+          'title' => 'Log out',
+          'rel' => 'tooltip',
+          'data-placement' => 'bottom',
         ),
         '#below' => array(),
       ),
@@ -692,10 +704,12 @@ function template_preprocess_ombu_toolbar(&$variables) {
           'attributes' => array(
             'class' => array('toolbar-collapse-button'),
             'title' => 'Collapse Toolbar',
+            'rel' => 'tooltip',
+            'data-placement' => 'bottom',
           ),
         ),
         '#attributes' => array(
-          'class' => array('logout'),
+          'class' => array('icon-resize-small icon-white'),
         ),
         '#below' => array(),
       ),
