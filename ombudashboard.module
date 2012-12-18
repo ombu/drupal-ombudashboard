@@ -67,7 +67,7 @@ function ombudashboard_theme($existing, $type, $theme, $path) {
       'variables' => array('content' => NULL),
     ),
     'ombu_admin_block_content_manage' => array(
-      'variables' => array('content' => NULL),
+      'variables' => array('content' => NULL, 'block' => NULL),
     ),
     'ombu_toolbar' => array(
       'variables' => array(),
@@ -339,7 +339,7 @@ function theme_dashboard_page($variables) {
     }
 
     if ($block['theme']) {
-      $block['content'] = theme($block['theme'], array('content' => $block['content']));
+      $block['content'] = theme($block['theme'], array('content' => $block['content'], 'block' => $block));
     }
 
     $block['show'] = TRUE;
@@ -432,12 +432,15 @@ function theme_ombu_admin_block_content_manage($variables) {
     }
   }
   $output .= '</dl><div class="description">Add or manage existing content by type.</div></li>';
-  $output .= '<li id="code-content-node-picker">';
-  $form = drupal_get_form('ombudashboard_find_node');
-  $output .= drupal_render($form);
-  $output .= '<div class="description">Find content by title.</div></li></ul>';
 
-  $output .= theme('ombu_admin_block_content', array('content' => $plain_items));
+  if (!isset($variables['block']['hide_picker']) || !$variables['block']['hide_picker']) {
+    $output .= '<li id="code-content-node-picker">';
+    $form = drupal_get_form('ombudashboard_find_node');
+    $output .= drupal_render($form);
+    $output .= '<div class="description">Find content by title.</div></li></ul>';
+
+    $output .= theme('ombu_admin_block_content', array('content' => $plain_items));
+  }
 
   return $output;
 }
