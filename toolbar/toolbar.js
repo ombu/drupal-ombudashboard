@@ -221,6 +221,9 @@ Drupal.dashboardToolbar = {
             },
             html: {}
           };
+      if (Drupal.settings.ombutoolbar.top_padding) {
+        opts.html['padding-top'] = this.$toolbar.data('toolbarHeight')+'px';
+      }
       if (noAnimation) {
         this.$toolbar.css(opts.toolbar);
         $('html').css(opts.html);
@@ -242,6 +245,9 @@ Drupal.dashboardToolbar = {
             },
             html: {}
           };
+      if (Drupal.settings.ombutoolbar.top_padding) {
+        opts.html['padding-top'] = 0;
+      }
       if (noAnimation) {
         this.$toolbar.css(opts.toolbar);
         $('html').css(opts.html);

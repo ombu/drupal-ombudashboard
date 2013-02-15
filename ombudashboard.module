@@ -732,6 +732,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
   $variables['drawer'] = $drawer;
 
   drupal_add_library('ombudashboard', 'ombutoolbar');
+  drupal_add_js(array('ombutoolbar' => array('top_padding' => variable_get('ombutoolbar_top_padding', TRUE))), 'setting');
 }
 
 /**
