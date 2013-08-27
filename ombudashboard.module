@@ -191,7 +191,7 @@ JS;
 
   // Add environment indicator on all environments except production.
   $environment = variable_get('environment', 'development');
-  if ($environment != 'production') {
+  if ($environment != 'production' && current_path() != 'media/browser') {
     $environment = $environment == 'development' ? 'dev' : $environment;
     $page['page_bottom']['environment_indicator'] = array(
       '#markup' => "
