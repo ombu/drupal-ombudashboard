@@ -252,6 +252,30 @@ function ombudashboard_views_api() {
 }
 
 /**
+ * Implements hook_views_default_views().
+ */
+function ombudashboard_views_default_views() {
+  $files = array(
+    'manage_users.view.inc',
+  );
+
+  // Conditionally include content management screen based on if workbench
+  // moderation is disabled. ombu_workbench includes a page callback with custom 
+  if (!module_exists('ombu_workbench')) {
+    $files[] = 'manage_content.view.inc';
+  }
+
+  $path = drupal_get_path('module', 'ombudashboard') . '/views/';
+  $views = array();
+  foreach ($files as $file) {
+    include $path . $file;
+    $views[$view->name] = $view;
+  }
+
+  return $views;
+}
+
+/**
  * Implements hook_library().
  */
 function ombudashboard_library() {

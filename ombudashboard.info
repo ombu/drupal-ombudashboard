@@ -7,8 +7,5 @@ php = 5.1
 dependencies[] = views_bulk_operations
 dependencies[] = statistics
 
-files[] = ombudashboard.install
-files[] = ombudashboard.module
-files[] = ombudashboard.views_default.inc
 files[] = siteconfig.inc.php
 files[] = supplementary_content.inc.php
