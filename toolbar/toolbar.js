@@ -236,6 +236,7 @@ Drupal.dashboardToolbar = {
       }
       $(window).trigger('toolbar.open', {init: false});
       $.cookie('dashboardToolbar.open', 1);
+      $('html').addClass('toolbar-open');
     },
 
     toolbarClose: function(noAnimation) {
@@ -260,6 +261,7 @@ Drupal.dashboardToolbar = {
       }
       $(window).trigger('toolbar.close', {init: false});
       $.cookie('dashboardToolbar.open', 0);
+      $('html').removeClass('toolbar-open');
       this.closeDrawer();
     }
 };
