@@ -260,8 +260,8 @@ function ombudashboard_views_default_views() {
   );
 
   // Conditionally include content management screen based on if workbench
-  // moderation is disabled. ombu_workbench includes a page callback with custom 
-  if (!module_exists('ombu_workbench')) {
+  // moderation is disabled. ombubench includes a page callback with custom 
+  if (!module_exists('ombubench')) {
     $files[] = 'manage_content.view.inc';
   }
 
