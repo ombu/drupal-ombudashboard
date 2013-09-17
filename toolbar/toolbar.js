@@ -50,6 +50,9 @@ Drupal.dashboardToolbar = {
 
         // Bind Event Handlers, duh
         this.bindEventHandlers();
+
+        // Turn content links into a select list.
+        this.initContentManagementPicker();
     },
 
     bindEventHandlers: function() {

@@ -19,7 +19,8 @@
  * Aggressive resets so we can achieve a consistent look in hostile CSS
  * environments.
  */
-#toolbar, #toolbar * {
+#toolbar,
+#toolbar * {
   margin: 0;
   padding: 0;
   border: 0;
@@ -76,7 +77,8 @@
   text-decoration: none;
   color: #fff;
 }
-#toolbar ul li, #toolbar ul li a {
+#toolbar ul li,
+#toolbar ul li a {
   float: left;
 }
 #toolbar .toolbar-drawer li a {
@@ -134,7 +136,9 @@
   border-radius: 10px;
   padding: 0 10px;
 }
-#toolbar div.toolbar-menu ul li a:focus, #toolbar div.toolbar-menu ul li a:hover, #toolbar div.toolbar-menu ul li a.active:focus {
+#toolbar div.toolbar-menu ul li a:focus,
+#toolbar div.toolbar-menu ul li a:hover,
+#toolbar div.toolbar-menu ul li a.active:focus {
   background: #444;
 }
 #toolbar #toolbar-local {
@@ -179,7 +183,9 @@
   line-height: 30px;
   color: #bbb;
 }
-#toolbar a#edit-shortcuts:focus, #toolbar div#toolbar a#edit-shortcuts:hover, #toolbar a#edit-shortcuts.active {
+#toolbar a#edit-shortcuts:focus,
+#toolbar div#toolbar a#edit-shortcuts:hover,
+#toolbar a#edit-shortcuts.active {
   color: #fff;
 }
 #toolbar div.toolbar-shortcuts ul {
@@ -194,15 +200,21 @@
   padding: 5px;
   margin-right: 5px;
 }
-#toolbar div.toolbar-shortcuts ul li a:focus, #toolbar div.toolbar-shortcuts ul li a:hover, #toolbar div.toolbar-shortcuts ul li a.active:focus {
+#toolbar div.toolbar-shortcuts ul li a:focus,
+#toolbar div.toolbar-shortcuts ul li a:hover,
+#toolbar div.toolbar-shortcuts ul li a.active:focus {
   background: #555;
 }
-#toolbar div.toolbar-shortcuts ul li a.active, #toolbar div.toolbar-shortcuts ul li a.active:hover {
+#toolbar div.toolbar-shortcuts ul li a.active,
+#toolbar div.toolbar-shortcuts ul li a.active:hover {
   background: #000;
 }
-#toolbar div.toolbar-shortcuts ul .core-content select {
+#toolbar div.toolbar-shortcuts ul.core-content select {
+  border-radius: 4px;
   font-size: 12px;
   padding: 4px;
+  height: auto;
+  width: auto;
 }
 #toolbar div.toolbar-shortcuts ul span.icon {
   float: left;
