@@ -216,6 +216,9 @@
   height: auto;
   width: auto;
 }
+#toolbar div.toolbar-shortcuts ul.core-content li a.active {
+  background: none;
+}
 #toolbar div.toolbar-shortcuts ul span.icon {
   float: left;
   background: #444;
