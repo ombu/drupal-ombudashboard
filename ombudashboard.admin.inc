@@ -49,6 +49,24 @@ function ombudashboard_batch_clear_caches() {
     'file' => drupal_get_path('module', 'ombudashboard') . '/ombudashboard.admin.inc',
   );
   batch_set($batch);
+
+  // Rebuild xmlsitemap if needed.
+  if (module_exists('xmlsitemap')) {
+    // If there were no new or changed links, skip.
+    if (!variable_get('xmlsitemap_regenerate_needed', FALSE)) {
+      return;
+    }
+
+    // If the minimum sitemap lifetime hasn't been passed, skip.
+    $lifetime = REQUEST_TIME - variable_get('xmlsitemap_generated_last', 0);
+    if ($lifetime < variable_get('xmlsitemap_minimum_lifetime', 0)) {
+      return;
+    }
+
+    module_load_include('inc', 'xmlsitemap', 'xmlsitemap.generate');
+    $batch = xmlsitemap_regenerate_batch();
+    batch_set($batch);
+  }
 }
 
 /**
