@@ -260,12 +260,21 @@ function _ombudashboard_get_supplementary_content_block() {
     $content[] = $obj;
   }
 
-  if (user_access('administer blocks')) {
+  if (user_access('administer files')) {
     $content[] = array(
-      'title' => 'Site Blocks',
-      'href' => 'admin/structure/block',
+      'title' => 'Files',
+      'href' => 'admin/dashboard/manage-files',
       'localized_options' => array(),
-      'description' => 'Advanced feature. Only use if familiar with it.',
+      'description' => 'Edit and delete media files',
+    );
+  }
+
+  if (user_access('administer redirects')) {
+    $content[] = array(
+      'title' => 'Redirects',
+      'href' => 'admin/config/search/redirect',
+      'localized_options' => array(),
+      'description' => 'Add/edit page redirects.',
     );
   }
 
