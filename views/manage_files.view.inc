@@ -208,6 +208,13 @@ $handler->display->display_options['filters']['type']['expose']['remember_roles'
   5 => 0,
   6 => 0,
 );
+/* Filter criterion: File: Status */
+$handler->display->display_options['filters']['status']['id'] = 'status';
+$handler->display->display_options['filters']['status']['table'] = 'file_managed';
+$handler->display->display_options['filters']['status']['field'] = 'status';
+$handler->display->display_options['filters']['status']['value'] = array(
+  1 => '1',
+);
 
 /* Display: Manage Files */
 $handler = $view->new_display('page', 'Manage Files', 'page');
