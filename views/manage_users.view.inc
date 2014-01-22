@@ -208,5 +208,5 @@ $handler->display->display_options['footer']['text']['id'] = 'area';
 $handler->display->display_options['footer']['text']['table'] = 'views';
 $handler->display->display_options['footer']['text']['field'] = 'area';
 $handler->display->display_options['footer']['text']['content'] = '<a href="/admin/user/user/create">Add User</a>';
-$handler->display->display_options['footer']['text']['format'] = '3';
+$handler->display->display_options['footer']['text']['format'] = 'default';
 $handler->display->display_options['path'] = 'admin/dashboard/manage-users';
