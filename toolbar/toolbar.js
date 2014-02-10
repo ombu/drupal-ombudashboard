@@ -87,6 +87,8 @@ Drupal.dashboardToolbar = {
 
       this.$expandButton
         .click($.proxy(Drupal.dashboardToolbar.toolbarOpenClick, this));
+
+      $(window).resize(debounce($.proxy(Drupal.dashboardToolbar.resize, this)));
     },
 
     initContentManagementPicker: function() {
@@ -266,7 +268,22 @@ Drupal.dashboardToolbar = {
       $.cookie('dashboardToolbar.open', 0);
       $('html').removeClass('toolbar-open');
       this.closeDrawer();
+    },
+
+    resize: function() {
+      if (Drupal.settings.ombutoolbar.top_padding) {
+        var toolbarHeight = this.$toolbar.height();
+        this.$toolbar.data('toolbarHeight', toolbarHeight)
+
+        if ($.cookie('dashboardToolbar.open') == 0) {
+          this.$toolbar.css('top', '-' + toolbarHeight + 'px');
+        }
+        else {
+          $('html').css('padding-top', toolbarHeight+'px');
+        }
+      }
     }
+
 };
 
 
@@ -279,6 +296,29 @@ Drupal.behaviors.dashboardToolbar = {
     $('#toolbar').addClass('dashboardToolbarProcessed');
   }
 };
+
+function debounce(func, threshold, execAsap) {
+  var timeout;
+
+  return function debounced () {
+    var obj = this, args = arguments;
+    function delayed () {
+      if (!execAsap) {
+        func.apply(obj, args);
+      }
+      timeout = null;
+    };
+
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    else if (execAsap) {
+      func.apply(obj, args);
+    }
+
+    timeout = setTimeout(delayed, threshold || 100);
+  };
+}
 
 })(jQuery);
 
