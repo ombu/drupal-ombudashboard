@@ -50,9 +50,11 @@ Drupal.dashboardToolbar = {
 
         // Bind Event Handlers, duh
         this.bindEventHandlers();
+        this.resize();
 
         // Turn content links into a select list.
         this.initContentManagementPicker();
+
     },
 
     bindEventHandlers: function() {
@@ -240,7 +242,7 @@ Drupal.dashboardToolbar = {
         this.$expandButton.fadeOut('fast');
       }
       $(window).trigger('toolbar.open', {init: false});
-      $.cookie('dashboardToolbar.open', 1);
+      $.cookie('dashboardToolbar.open', 1, {path: '/'});
       $('html').addClass('toolbar-open');
     },
 
@@ -265,7 +267,7 @@ Drupal.dashboardToolbar = {
         this.$expandButton.fadeIn('fast');
       }
       $(window).trigger('toolbar.close', {init: false});
-      $.cookie('dashboardToolbar.open', 0);
+      $.cookie('dashboardToolbar.open', 0, {path: '/'});
       $('html').removeClass('toolbar-open');
       this.closeDrawer();
     },
