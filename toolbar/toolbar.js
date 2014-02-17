@@ -273,6 +273,15 @@ Drupal.dashboardToolbar = {
     },
 
     resize: function() {
+
+      // Retract the toolbar if the window is resized to less than the
+      // smartphone landscape threshold, so that it will gracefully resume
+      // accessibility if the window width is increased back to the desktop
+      // threshold.  This accompanies styles in toolbar.css.
+      if ($(window).outerWidth() <= 1024) {
+        this.toolbarClose();
+      }
+
       if (Drupal.settings.ombutoolbar.top_padding) {
         var toolbarHeight = this.$toolbar.height();
         this.$toolbar.data('toolbarHeight', toolbarHeight)
