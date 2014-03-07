@@ -71,7 +71,7 @@ function ombudashboard_clear_cache(&$context) {
  */
 function ombudashboard_index_batch_index_entities(&$context) {
   module_load_include('inc', 'apachesolr', 'apachesolr.admin');
-  apachesolr_index_batch_index_entities('solr', $context);
+  apachesolr_index_batch_index_entities('solr', NULL, $context);
 }
 
 /**
