@@ -116,6 +116,7 @@ Drupal.dashboardToolbar = {
 
             var s = document.createElement('select');
             s.className = "form-select";
+            s.id = "core-content-select";
             addOption(s, 'null', '- Choose a type of content -');
             items.each( function(i) {
                 addOption(s, i, $('.operation-object', this).text().replace(':', ''));
