@@ -97,12 +97,12 @@ if (Drupal.jsAC) {
       }
 
       // Prepare matches.
-      var ul = jQuery('<ul></ul>');
+      var ul = jQuery('<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"></ul>');
       var ac = this;
       for (key in matches) {
         jQuery('<li></li>')
-          .html(jQuery('<div></div>').html(matches[key]))
-          .mousedown(function () { ac.select(this); })
+          .html(jQuery('<a tabindex="-1" href="#"></a>').html(matches[key]))
+          .mousedown(function () { ac.select(this); return false; })
           .mouseover(function () { ac.highlight(this); })
           .mouseout(function () { ac.unhighlight(this); })
           .data('autocompleteValue', key)
@@ -113,7 +113,8 @@ if (Drupal.jsAC) {
       // Show popup with matches, if any.
       if (this.popup) {
         if (ul.children().size()) {
-          jQuery(this.popup).empty().append(ul).show();
+          jQuery(this.popup).empty().append(ul);
+          ul.show();
           jQuery(this.ariaLive).html(Drupal.t('Autocomplete popup'));
         }
         else {

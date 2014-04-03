@@ -50,9 +50,11 @@ Drupal.dashboardToolbar = {
 
         // Bind Event Handlers, duh
         this.bindEventHandlers();
+        this.resize();
 
         // Turn content links into a select list.
         this.initContentManagementPicker();
+
     },
 
     bindEventHandlers: function() {
@@ -87,6 +89,8 @@ Drupal.dashboardToolbar = {
 
       this.$expandButton
         .click($.proxy(Drupal.dashboardToolbar.toolbarOpenClick, this));
+
+      $(window).resize(debounce($.proxy(Drupal.dashboardToolbar.resize, this)));
     },
 
     initContentManagementPicker: function() {
@@ -112,6 +116,7 @@ Drupal.dashboardToolbar = {
 
             var s = document.createElement('select');
             s.className = "form-select";
+            s.id = "core-content-select";
             addOption(s, 'null', '- Choose a type of content -');
             items.each( function(i) {
                 addOption(s, i, $('.operation-object', this).text().replace(':', ''));
@@ -238,7 +243,7 @@ Drupal.dashboardToolbar = {
         this.$expandButton.fadeOut('fast');
       }
       $(window).trigger('toolbar.open', {init: false});
-      $.cookie('dashboardToolbar.open', 1);
+      $.cookie('dashboardToolbar.open', 1, {path: '/'});
       $('html').addClass('toolbar-open');
     },
 
@@ -263,10 +268,34 @@ Drupal.dashboardToolbar = {
         this.$expandButton.fadeIn('fast');
       }
       $(window).trigger('toolbar.close', {init: false});
-      $.cookie('dashboardToolbar.open', 0);
+      $.cookie('dashboardToolbar.open', 0, {path: '/'});
       $('html').removeClass('toolbar-open');
       this.closeDrawer();
+    },
+
+    resize: function() {
+
+      // Retract the toolbar if the window is resized to less than the
+      // smartphone landscape threshold, so that it will gracefully resume
+      // accessibility if the window width is increased back to the desktop
+      // threshold.  This accompanies styles in toolbar.css.
+      if ($(window).outerWidth() <= 1024) {
+        this.toolbarClose();
+      }
+
+      if (Drupal.settings.ombutoolbar.top_padding) {
+        var toolbarHeight = this.$toolbar.height();
+        this.$toolbar.data('toolbarHeight', toolbarHeight)
+
+        if ($.cookie('dashboardToolbar.open') == 0) {
+          this.$toolbar.css('top', '-' + toolbarHeight + 'px');
+        }
+        else {
+          $('html').css('padding-top', toolbarHeight+'px');
+        }
+      }
     }
+
 };
 
 
@@ -279,6 +308,29 @@ Drupal.behaviors.dashboardToolbar = {
     $('#toolbar').addClass('dashboardToolbarProcessed');
   }
 };
+
+function debounce(func, threshold, execAsap) {
+  var timeout;
+
+  return function debounced () {
+    var obj = this, args = arguments;
+    function delayed () {
+      if (!execAsap) {
+        func.apply(obj, args);
+      }
+      timeout = null;
+    };
+
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    else if (execAsap) {
+      func.apply(obj, args);
+    }
+
+    timeout = setTimeout(delayed, threshold || 100);
+  };
+}
 
 })(jQuery);
 

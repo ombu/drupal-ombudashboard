@@ -28,7 +28,7 @@ $handler->display->display_options['empty']['text']['id'] = 'area';
 $handler->display->display_options['empty']['text']['table'] = 'views';
 $handler->display->display_options['empty']['text']['field'] = 'area';
 $handler->display->display_options['empty']['text']['content'] = 'There are no objects satisfying the filter settings. Try changing them to get some results.';
-$handler->display->display_options['empty']['text']['format'] = '1';
+$handler->display->display_options['empty']['text']['format'] = 'default';
 /* Field: Bulk: Content */
 $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
 $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';

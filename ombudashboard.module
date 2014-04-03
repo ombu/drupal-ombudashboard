@@ -257,6 +257,7 @@ function ombudashboard_views_api() {
 function ombudashboard_views_default_views() {
   $files = array(
     'manage_users.view.inc',
+    'manage_files.view.inc',
   );
 
   // Conditionally include content management screen based on if workbench

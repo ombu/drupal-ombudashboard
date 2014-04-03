@@ -49,6 +49,13 @@ function ombudashboard_batch_clear_caches() {
     'file' => drupal_get_path('module', 'ombudashboard') . '/ombudashboard.admin.inc',
   );
   batch_set($batch);
+
+  // Rebuild xmlsitemap if needed.
+  if (module_exists('xmlsitemap')) {
+    module_load_include('inc', 'xmlsitemap', 'xmlsitemap.generate');
+    $batch = xmlsitemap_regenerate_batch();
+    batch_set($batch);
+  }
 }
 
 /**
@@ -64,7 +71,7 @@ function ombudashboard_clear_cache(&$context) {
  */
 function ombudashboard_index_batch_index_entities(&$context) {
   module_load_include('inc', 'apachesolr', 'apachesolr.admin');
-  apachesolr_index_batch_index_entities('solr', $context);
+  apachesolr_index_batch_index_entities('solr', NULL, $context);
 }
 
 /**
