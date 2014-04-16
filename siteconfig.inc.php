@@ -49,6 +49,61 @@ function ombudashboard_siteconfig($op, $form) {
             '#description' => 'This address is used for email correspondence. Please use a valid email address.',
         );
 
+        // Email.
+        if (module_exists('smtp')) {
+          $form['email'] = array(
+            '#type' => 'fieldset',
+            '#title' => t('Email'),
+            '#collapsible' => TRUE,
+            '#collapsed' => TRUE,
+          );
+
+
+          $form['email']['smtp_host'] = array(
+            '#type'          => 'textfield',
+            '#title'         => t('SMTP server'),
+            '#default_value' => variable_get('smtp_host', ''),
+            '#description'   => t('The address of your outgoing SMTP server.'),
+          );
+          $form['email']['smtp_hostbackup'] = array(
+            '#type'          => 'textfield',
+            '#title'         => t('SMTP backup server'),
+            '#default_value' => variable_get('smtp_hostbackup', ''),
+            '#description'   => t('The address of your outgoing SMTP backup server. If the primary server can\'t be found this one will be tried. This is optional.'),
+          );
+          $form['email']['smtp_port'] = array(
+            '#type'          => 'textfield',
+            '#title'         => t('SMTP port'),
+            '#size'          => 6,
+            '#maxlength'     => 6,
+            '#default_value' => variable_get('smtp_port', '25'),
+            '#description'   => t('The default SMTP port is 25, if that is being blocked try 80. Gmail uses 465. See !url for more information on configuring for use with Gmail.', array('!url' => l(t('this page'), 'http://gmail.google.com/support/bin/answer.py?answer=13287'))),
+          );
+          // Only display the option if openssl is installed.
+          if (function_exists('openssl_open')) {
+            $encryption_options = array(
+              'standard' => t('No'),
+              'ssl'      => t('Use SSL'),
+              'tls'      => t('Use TLS'),
+            );
+            $encryption_description = t('This allows connection to an SMTP server that requires SSL encryption such as Gmail.');
+          }
+          // If openssl is not installed, use normal protocol.
+          else {
+            variable_set('smtp_protocol', 'standard');
+            $encryption_options = array('standard' => t('No'));
+            $encryption_description = t('Your PHP installation does not have SSL enabled. See the !url page on php.net for more information. Gmail requires SSL.', array('!url' => l(t('OpenSSL Functions'), 'http://php.net/openssl')));
+          }
+          $form['email']['smtp_protocol'] = array(
+            '#type'          => 'select',
+            '#title'         => t('Use encrypted protocol'),
+            '#default_value' => variable_get('smtp_protocol', 'standard'),
+            '#options'       => $encryption_options,
+            '#description'   => $encryption_description,
+          );
+
+        }
+
         // Google Analytics
         $form['services'] = array(
             '#type' => 'fieldset',
