@@ -822,19 +822,15 @@ function ombudashboard_content_edit($type, $label) {
  */
 function ombudashboard_find_node($form) {
 
-  $form['title'] = array(
+  $form['nid'] = array(
     '#type' => 'textfield',
     '#autocomplete_path' => 'admin/dashboard/autocomplete_node_titles',
     '#size' => 45,
   );
-  $form['nid'] = array(
-    '#type' => 'hidden',
-    '#default_value' => '',
-  );
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Edit',
+    '#value' => 'View',
   );
   return $form;
 }
@@ -852,9 +848,9 @@ function ombudashboard_find_node_validate($form_id, $form_state) {
 /**
  * @todo Please document this function.
  * @see http://drupal.org/node/1354
- *'/
+ */
 function ombudashboard_find_node_submit($form_id, $form_state) {
-  drupal_goto('node/' . $form_state['values']['nid'] . '/edit');
+  drupal_goto('node/' . $form_state['values']['nid']);
 }
 
 
