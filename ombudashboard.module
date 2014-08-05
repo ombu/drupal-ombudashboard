@@ -326,6 +326,8 @@ function ombudashboard_page() {
     return theme('dashboard_page', array('block' => array()));
   }
 
+  drupal_add_css(drupal_get_path('module', 'ombudashboard') . '/css/dashboard.css');
+
   require_once DRUPAL_ROOT . '/' . $admin_blocks_path;
   $blocks = _ombudashboard_get_admin_blocks();
   return array(
