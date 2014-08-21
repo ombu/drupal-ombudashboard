@@ -7,7 +7,7 @@ php = 5.1
 
 version = 7.x-0.2
 
-dependencies[] = views_bulk_operations (>7.x-3.2)
+dependencies[] = views_bulk_operations
 dependencies[] = statistics
 
 files[] = siteconfig.inc.php
