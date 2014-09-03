@@ -3,6 +3,12 @@
   padding-left: 0;
   padding-right: 0.5em;
 }
+#core-content-operations .select2-container {
+  width: 250px !important;
+}
+#core-content-operations a.select2-choice {
+  padding-left: 8px;
+}
 #core-content-operations select {
   margin-bottom: 10px;
 }
