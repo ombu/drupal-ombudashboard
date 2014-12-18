@@ -1,12 +1,11 @@
 <?php
 
 /**
- * @file ombudashboard.module
+ * @file
+ * Implements the dashboard and siteconfig functionality.
  *
- *   Implements the dashboard and siteconfig functionality.
- *   Dashboard blocks are defined in a file ombudashboard.admin_blocks.inc
- *   that must live in the active front-end theme
- *
+ * Dashboard blocks are defined in a file ombudashboard.admin_blocks.inc
+ * that must live in the active front-end theme
  */
 
 /**
@@ -35,7 +34,7 @@ function ombudashboard_menu() {
     'page arguments' => array(3),
     'access callback' => 'user_access',
     'access arguments' => array('access the dashboard page'),
-    'weight' => - 20,
+    'weight' => -20,
   );
   $items['admin/dashboard/supplementary-content/%'] = array(
     'page callback' => 'drupal_get_form',
@@ -74,7 +73,11 @@ function ombudashboard_theme($existing, $type, $theme, $path) {
       'template' => 'ombu_toolbar',
     ),
     'ombu_toolbar_operations' => array(
-      'variables' => array('title' => NULL, 'operations' => array(), 'attributes' => array()),
+      'variables' => array(
+        'title' => NULL,
+        'operations' => array(),
+        'attributes' => array()
+      ),
     ),
   );
 }
@@ -111,7 +114,7 @@ function ombudashboard_permission() {
  * Implements hook_user_login().
  */
 function ombudashboard_user_login(&$edit, $account) {
-  // Redirect to Dashboard if they have permissions
+  // Redirect to Dashboard if they have permissions.
   if (!ombudashboard_user_is_system() && user_access('access the dashboard page') && arg(1) != 'reset') {
     $_GET['destination'] = 'admin/dashboard';
   }
@@ -130,12 +133,13 @@ function ombudashboard_admin_paths_alter(&$paths) {
 
 /**
  * Implements hook_init().
+ *
  * - Redirect user to admin/dashboard if they're not permissioned or user 1
  * - Redirect user from admin/user/permissions if they're not user 1
  */
 function ombudashboard_init() {
   global $user;
-  if ((arg(0) == 'admin' && !arg(1)) && ( user_access('redirect from admin to dashboard') && $user->uid != 1 )) {
+  if ((arg(0) == 'admin' && !arg(1)) && (user_access('redirect from admin to dashboard') && $user->uid != 1)) {
     drupal_goto('admin/dashboard');
   }
 
@@ -154,7 +158,7 @@ function ombudashboard_page_alter(&$page) {
   global $theme;
   if ($theme != variable_get('admin_theme', '')) {
 
-    // Add Google Analytics if this is the front & a key is set
+    // Add Google Analytics if this is the front & a key is set.
     if ($google_analytics_key = variable_get('google_analytics_key', '')) {
       $out .= <<<JS
 <script type="text/javascript">
@@ -216,7 +220,8 @@ JS;
 }
 
 /**
- * Page Preprocess
+ * Implements hook_preprocess_page().
+ *
  * @todo: This could be done in a much better way, maybe hook_page_alter()?
  */
 function ombudashboard_preprocess_page(&$vars) {
@@ -236,7 +241,7 @@ function ombudashboard_preprocess_page(&$vars) {
  */
 function ombudashboard_menu_alter(&$items) {
 
-  // Rename Taxonomy task to Categories
+  // Rename Taxonomy task to Categories.
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/add/term']['title'] = 'Add Category';
 
   // Block access to menu edit & delete unless user is 'system'
@@ -261,7 +266,7 @@ function ombudashboard_views_default_views() {
   );
 
   // Conditionally include content management screen based on if workbench
-  // moderation is disabled. ombubench includes a page callback with custom 
+  // moderation is disabled. ombubench includes a page callback with custom.
   if (!module_exists('ombubench')) {
     $files[] = 'manage_content.view.inc';
   }
@@ -299,7 +304,7 @@ function ombudashboard_library() {
 /**
  * Access callback.
  *
- * @return boolean
+ * @return bool
  *   TRUE if user is user 1 (root)
  */
 function ombudashboard_user_is_system() {
@@ -313,7 +318,7 @@ function ombudashboard_user_is_system() {
 }
 
 /**
- * Dashboard page callback
+ * Dashboard page callback.
  */
 function ombudashboard_page() {
   $module_path = drupal_get_path('module', 'ombudashboard');
@@ -345,13 +350,15 @@ function ombudashboard_page() {
 
 /**
  * This function formats the dashboard page for viewing.
+ *
  * It's based on theme_admin_page() in system.admin.inc
  *
- * @param $blocks
+ * @param array $blocks
  *   An array of blocks to display. Each array should include a
  *   'title', a 'description', a formatted 'content' and a
  *   'position' which will control which container it will be
  *   in. This is usually 'left' or 'right'.
+ *
  * @ingroup themeable
  */
 function theme_dashboard_page($variables) {
@@ -372,7 +379,7 @@ function theme_dashboard_page($variables) {
     $block['show'] = TRUE;
     if ($block_output = theme('admin_block', array('block' => $block))) {
       if (empty($block['position'])) {
-        // perform automatic striping.
+        // Perform automatic striping.
         $block['position'] = ++$stripe % 2 ? 'left' : 'right';
       }
       if (!isset($container[$block['position']])) {
@@ -395,11 +402,11 @@ function theme_dashboard_page($variables) {
 
 
 /**
- * This function formats a dashboard page block to manage nodes of various types
+ * This function formats a dashboard page block to manage nodes of various types.
  *
- * All other blocks should use theme_ombu_admin_block_content()
+ * All other blocks should use theme_ombu_admin_block_content().
  *
- * @param $content
+ * @param array $content
  *   an array of grouped arrays
  *   array(
  *     'title' => 'FAQs',
@@ -417,6 +424,7 @@ function theme_dashboard_page($variables) {
  *         ),
  *      ),
  *   );
+ *
  * @ingroup themeable
  */
 function theme_ombu_admin_block_content_manage($variables) {
@@ -473,8 +481,7 @@ function theme_ombu_admin_block_content_manage($variables) {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Theme callback for dashboard block.
  */
 function theme_ombu_admin_block_content($variables) {
   $content = $variables['content'];
@@ -514,7 +521,7 @@ function theme_ombu_admin_block_content($variables) {
 }
 
 /**
- * Preprocess variables for ombu_toolbar.tpl.php
+ * Implements hook_preprocess_ombu_toolbar().
  */
 function template_preprocess_ombu_toolbar(&$variables) {
   $drawer_counter = 0;
@@ -573,7 +580,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
     $drawer_counter++;
   }
 
-  // Load admin blocks
+  // Load admin blocks.
   $admin_blocks_path = conf_path() . '/ombudashboard.admin_blocks.inc';
   if (!file_exists($admin_blocks_path)) {
     $example_path = drupal_get_path('module', 'ombudashboard') . '/ombudashboard.admin_blocks.inc.example';
@@ -594,7 +601,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
         continue;
       }
 
-      // Top level item
+      // Top level item.
       $class = array();
       if ($i == 0) {
         $class[] = 'first';
@@ -606,9 +613,9 @@ function template_preprocess_ombu_toolbar(&$variables) {
       $menu['dashboard'][] = array(
         '#theme' => 'menu_link',
         '#title' => $block['title'],
-        '#href' => isset($block['href']) ?  $block['href'] : 'admin/dashboard',
+        '#href' => isset($block['href']) ? $block['href'] : 'admin/dashboard',
         '#localized_options' => array(
-          'html' => TRUE, // In case there are &amp; or &raquo; in the title
+          'html' => TRUE,
           'fragment' => 'drawer-' . $drawer_counter,
           'attributes' => array(
             'class' => array('drawer-link'),
@@ -639,7 +646,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
           $class[] = 'last';
         }
 
-        // Content operations block
+        // Content operations block.
         if (isset($k['operations'])) {
           $block_drawer[] = array(
             '#theme' => 'ombu_toolbar_operations',
@@ -679,7 +686,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
     }
   }
 
-  // Get the current path
+  // Get the current path.
   global $user;
   $curr_path = base_path() . drupal_get_path_alias();
   $variables['curr_path'] = $curr_path;
@@ -782,8 +789,6 @@ function theme_ombu_toolbar_operations($variables) {
 
 /**
  * Implements hook_current_page_links().
- * @return mixed
- *   Array of link items
  */
 function ombudashboard_current_page_links() {
   return NULL;
@@ -803,7 +808,7 @@ function ombudashboard_content_edit($type, $label) {
           'title' => 'Add',
           'href' => 'node/add/' . str_replace("_", "-", $type),
           'localized_options' => array(),
-          'attributes' => array( 'class' =>  'foo'),
+          'attributes' => array('class' => 'foo'),
         ),
       ),
     );
@@ -855,9 +860,8 @@ function ombudashboard_find_node_submit($form_id, $form_state) {
   drupal_goto('node/' . $form_state['values']['nid']);
 }
 
-
 /**
- * Autocomplete
+ * Autocomplete node title.
  */
 function ombudashboard_node_title_autocomplete($string) {
   $items = array();
