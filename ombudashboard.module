@@ -150,6 +150,17 @@ function ombudashboard_init() {
 }
 
 /**
+ * Implements hook_html_head_alter().
+ */
+function ombudashboard_html_head_alter(&$head_elements) {
+  if ($google_verification_key = variable_get('google_site_verification_key', FALSE)) {
+    $head_elements['google_site_verification_key'] = array(
+      '#markup' => $google_verification_key . "\n",
+    );
+  }
+}
+
+/**
  * Implements hook_page_alter().
  */
 function ombudashboard_page_alter(&$page) {
@@ -157,6 +168,7 @@ function ombudashboard_page_alter(&$page) {
 
   global $theme;
   if ($theme != variable_get('admin_theme', '')) {
+    // Add Google Webmaster site verification metatag.
 
     // Add Google Analytics if this is the front & a key is set.
     if ($google_analytics_key = variable_get('google_analytics_key', '')) {

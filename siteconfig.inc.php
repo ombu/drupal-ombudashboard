@@ -121,6 +121,12 @@ function ombudashboard_siteconfig($op, $form) {
       '#default_value' => variable_get('google_analytics_key', ''),
       '#description' => 'Google Analytics will be used if this key is provided. <em>Ex Key: "UA-1234567-89"</em>',
     );
+    $form['services']['google_site_verification_key'] = array(
+      '#title' => t('Google Site Verification Key'),
+      '#type' => 'textfield',
+      '#default_value' => variable_get('google_site_verification_key', ''),
+      '#description' => 'Paste your meta tag code from Google Webmaster Tools here. After your site is confirmed with Google, we recommend you delete this key.',
+    );
     return $form;
   }
 }
