@@ -2,33 +2,11 @@
 /**
  * @file
  * Install, update and uninstall functions for the ombudashboard module.
- *
  */
 
-// $Id$
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
- */
-function ombudashboard_uninstall() {
-  // We no longer have these menus, but still deleting on unistall to
-  // support legacy versions
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("DELETE FROM {menu_custom} WHERE menu_name = 'dashboard-tasks'") */
-  db_delete('menu_custom')
-  ->condition('menu_name', 'dashboard-tasks')
-  ->execute();
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("DELETE FROM {menu_links} WHERE module = 'ombudashboard'") */
-  db_delete('menu_links')
-  ->condition('module', 'ombudashboard')
-  ->execute();
-}
-
-/**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Implements hook_install().
  */
 function ombudashboard_install() {
   $strings = variable_get('locale_custom_strings_en', array('' => array()));
@@ -43,37 +21,15 @@ function ombudashboard_install() {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Implements hook_uninstall().
  */
-function ombudashboard_update_6001() {
-  // Remove the old menu if it still exists
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("DELETE FROM {menu_custom} WHERE menu_name = 'dashboard-tasks'") */
+function ombudashboard_uninstall() {
+  // We no longer have these menus, but still deleting on unistall to support
+  // legacy versions.
   db_delete('menu_custom')
-  ->condition('menu_name', 'dashboard-tasks')
-  ->execute();
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("DELETE FROM {menu_links} WHERE module = 'ombudashboard'") */
+    ->condition('menu_name', 'dashboard-tasks')
+    ->execute();
   db_delete('menu_links')
-  ->condition('module', 'ombudashboard')
-  ->execute();
-
-  // Add toolbar permission to authenticated users
-  $rid = db_query("SELECT rid FROM {role} WHERE name = :name", array(':name' => 'authenticated user'))->fetchField();
-  $perms = db_query("SELECT perm FROM {role_permission} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
-  $perms .= ', show dashboard toolbar';
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("UPDATE {permission} SET perm = '%s' WHERE rid = %d", array($perms, $rid)) */
-  db_update('permission')
-  ->fields(array(
-    'perm' => $perms,
-  ))
-  ->condition('rid', $rid)
-  ->execute();
-
-  // hook_update_N() no longer returns a $ret array. Instead, return
-  // nothing or a translated string indicating the update ran successfully.
-  // See http://drupal.org/node/224333#update_sql.
-  return t('TODO Add a descriptive string here to show in the UI.') /* array() */;
+    ->condition('module', 'ombudashboard')
+    ->execute();
 }
