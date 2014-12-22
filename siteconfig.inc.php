@@ -54,6 +54,14 @@ function ombudashboard_siteconfig($op, $form) {
       '#description' => 'This address is used for email correspondence. Please use a valid email address.',
     );
 
+    if (module_exists('securepages')) {
+      $form['baseinfo']['securepages_enable'] = array(
+        '#title' => t('Enable SSL for site administration and selected content'),
+        '#type' => 'checkbox',
+        '#default_value' => variable_get('securepages_enable', FALSE),
+      );
+    }
+
     // Email.
     if (module_exists('smtp')) {
       $form['email'] = array(
@@ -127,6 +135,7 @@ function ombudashboard_siteconfig($op, $form) {
       '#default_value' => variable_get('google_site_verification_key', ''),
       '#description' => 'Paste your meta tag code from Google Webmaster Tools here. After your site is confirmed with Google, we recommend you delete this key.',
     );
+
     return $form;
   }
 }

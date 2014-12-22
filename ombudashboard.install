@@ -18,6 +18,15 @@ function ombudashboard_install() {
     'Execute' => 'Go',
   ));
   variable_set('locale_custom_strings_en', $strings);
+
+  variable_set('securepages_switch', 1);
+  variable_set('securepages_pages', <<<EOD
+admin/*
+node/*/edit
+user/*
+EOD
+);
+
 }
 
 /**

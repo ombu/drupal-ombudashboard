@@ -50,8 +50,55 @@ function ombudashboard_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'ombudashboard.admin.inc',
   );
+  $items['admin/dashboard/toggle-ssl'] = array(
+    'title' => 'Toggle SSL',
+    'page callback' => 'ombudashboard_toggle_ssl',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ombudashboard.admin.inc',
+  );
 
   return $items;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function ombudashboard_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add "Enable/Disable SSL" link to all pages that aren't admin paths.
+  if (variable_get('securepages_enable', 0) && user_access('administer site configuration') && !path_is_admin(current_path())) {
+    if (!$data['tabs']) {
+      $data['tabs'][0] = array(
+        'count' => 0,
+        'output' => array(),
+      );
+    }
+
+    $enabled = drupal_match_path(current_path(), variable_get('securepages_pages', ''));
+
+    $data['tabs'][0]['output'][] = array(
+      '#theme' => 'menu_local_task',
+      '#link' => array(
+        'title' => t('&#128274; !status SSL', array(
+          '!status' => $enabled ? t('Disable') : t('Enable'),
+        )),
+        'href' => 'admin/dashboard/toggle-ssl',
+        'localized_options' => array(
+          'html' => TRUE,
+          'query' => drupal_get_destination(),
+          'attributes' => array(
+            'title' => t('Add a new block to this page'),
+          ),
+        ),
+      ),
+    );
+
+    // Make sure the Add Block link shows up even for pages that don't have
+    // local tasks.
+    if ($data['tabs'][0]['count'] == 1) {
+      $data['tabs'][0]['count']++;
+    }
+  }
+
 }
 
 /**
