@@ -42,3 +42,60 @@ function ombudashboard_uninstall() {
     ->condition('module', 'ombudashboard')
     ->execute();
 }
+
+/**
+ * Implements hook_requirements().
+ */
+function ombudashboard_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  // Report if smtp is installed correctly and working.
+  if ($phase == 'runtime') {
+    $errors = FALSE;
+    if (!module_exists('smtp')) {
+      $errors = $t('SMTP module is not enabled');
+    }
+
+    if (!variable_get('smtp_on', 0)) {
+      $errors[] = $t('SMTP module is turned off. Active SMTP on <a href="!url">settings page</a>', array(
+        '!url' => url('admin/config/system/smtp'),
+      ));
+    }
+
+    if (!variable_get('smtp_host', 0)) {
+      $errors[] = $t('SMTP host is not set. Change on <a href="!url">settings page</a>', array(
+        '!url' => url('admin/config/system/smtp'),
+      ));
+    }
+
+    if (!variable_get('smtp_username', 0)) {
+      $errors[] = $t('SMTP username is not set. Change on <a href="!url">settings page</a>', array(
+        '!url' => url('admin/config/system/smtp'),
+      ));
+    }
+
+    if (!variable_get('smtp_password', 0)) {
+      $errors[] = $t('SMTP password is not set. Change on <a href="!url">settings page</a>', array(
+        '!url' => url('admin/config/system/smtp'),
+      ));
+    }
+
+    if ($errors) {
+      $requirements['smtp'] = array(
+        'title' => $t('SMTP'),
+        'value' => implode('<br />', $errors),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+    if (!$errors) {
+      $requirements['smtp'] = array(
+        'title' => $t('SMTP'),
+        'value' => $t('SMTP module is active and working'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+  }
+
+  return $requirements;
+}
