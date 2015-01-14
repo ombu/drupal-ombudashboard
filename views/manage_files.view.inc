@@ -213,6 +213,7 @@ $handler->display->display_options['filters']['type']['expose']['remember_roles'
 $handler->display->display_options['filters']['usage_in_use']['id'] = 'usage_in_use';
 $handler->display->display_options['filters']['usage_in_use']['table'] = 'file_usage';
 $handler->display->display_options['filters']['usage_in_use']['field'] = 'usage_in_use';
+$handler->display->display_options['filters']['usage_in_use']['value'] = 'All';
 $handler->display->display_options['filters']['usage_in_use']['group'] = 1;
 $handler->display->display_options['filters']['usage_in_use']['exposed'] = TRUE;
 $handler->display->display_options['filters']['usage_in_use']['expose']['operator_id'] = '';
