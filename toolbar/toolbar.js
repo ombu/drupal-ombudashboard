@@ -98,10 +98,6 @@ Drupal.dashboardToolbar = {
         if ($('.toolbar-shortcuts .core-content').length > 0) {
 
             var items = $('.toolbar-shortcuts .core-content li');
-            // break if there's only one
-            if (items.length < 2) {
-                return;
-            }
 
             function addOption(parent, value, text) {
                 var o = document.createElement('option');
@@ -115,7 +111,7 @@ Drupal.dashboardToolbar = {
             }
 
             var s = document.createElement('select');
-            s.className = "form-select";
+            s.className = "form-select select2-excluded";
             s.id = "core-content-select";
             addOption(s, 'null', '- Choose a type of content -');
             items.each( function(i) {
