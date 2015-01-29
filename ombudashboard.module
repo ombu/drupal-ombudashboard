@@ -197,12 +197,20 @@ function ombudashboard_init() {
 }
 
 /**
- * Implements hook_html_head_alter().
+ * Implements hook_preprocess_html().
  */
-function ombudashboard_html_head_alter(&$head_elements) {
+function ombudashboard_preprocess_html(&$variables) {
   if ($google_verification_key = variable_get('google_site_verification_key', FALSE)) {
-    $head_elements['google_site_verification_key'] = array(
-      '#markup' => $google_verification_key . "\n",
+    drupal_add_html_head(
+      array(
+        '#type' => 'html_tag',
+        '#tag' => 'meta',
+        '#attributes' => array(
+          'name' => 'google-site-verification',
+          'content' => $google_verification_key,
+        ),
+      ),
+      'google_site_verification_key'
     );
   }
 }
