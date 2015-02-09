@@ -46,13 +46,10 @@
   /**
    * Administration menu.
    */
-
   /**
    * Collapsed drawer of additional toolbar content.
    */
-
   /* From D7 Shortcuts module, provides styling for 2nd level toolbar items */
-
 }
 #toolbar .toolbar-expanded-items {
   background: #666666;
@@ -280,13 +277,3 @@
 /**
  * Mixins
  */
-
-/* Hide toolbar below the smartphone landscape threshold */
-@media all and (max-width: 1024px) {
-  html[style] {
-    padding-top: 0 !important;
-  }
-  #toolbar[style] {
-    display: none !important;
-  }
-}

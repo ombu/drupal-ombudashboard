@@ -1,6 +1,5 @@
 <?php
 
-
 $view = new view();
 $view->name = 'manage_users';
 $view->description = 'Manage Users';
@@ -13,7 +12,6 @@ $view->disabled = FALSE; /* Edit this to true to make a default view disabled in
 
 /* Display: Defaults */
 $handler = $view->new_display('default', 'Defaults', 'default');
-$handler->display->display_options['use_ajax'] = TRUE;
 $handler->display->display_options['use_more_always'] = FALSE;
 $handler->display->display_options['access']['type'] = 'perm';
 $handler->display->display_options['access']['perm'] = 'administer users';
@@ -73,49 +71,87 @@ $handler->display->display_options['fields']['views_bulk_operations_1']['table']
 $handler->display->display_options['fields']['views_bulk_operations_1']['field'] = 'views_bulk_operations';
 $handler->display->display_options['fields']['views_bulk_operations_1']['hide_alter_empty'] = FALSE;
 $handler->display->display_options['fields']['views_bulk_operations_1']['vbo_settings']['display_type'] = '0';
+$handler->display->display_options['fields']['views_bulk_operations_1']['vbo_settings']['enable_select_all_pages'] = 1;
 $handler->display->display_options['fields']['views_bulk_operations_1']['vbo_settings']['force_single'] = 0;
 $handler->display->display_options['fields']['views_bulk_operations_1']['vbo_settings']['entity_load_capacity'] = '10';
 $handler->display->display_options['fields']['views_bulk_operations_1']['vbo_operations'] = array(
   'action::user_block_user_action' => array(
     'selected' => 1,
+    'postpone_processing' => 0,
     'skip_confirmation' => 0,
     'override_label' => 0,
     'label' => '',
+  ),
+  'action::views_bulk_operations_user_cancel_action' => array(
+    'selected' => 1,
     'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => '',
   ),
   'action::views_bulk_operations_delete_item' => array(
-    'selected' => 1,
-    'skip_confirmation' => 0,
-    'override_label' => 1,
-    'label' => 'Delete user',
+    'selected' => 0,
     'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => 'Delete user',
+  ),
+  'action::views_bulk_operations_delete_revision' => array(
+    'selected' => 0,
+    'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => '',
   ),
   'action::views_bulk_operations_script_action' => array(
     'selected' => 0,
-    'skip_confirmation' => 0,
-    'override_label' => 1,
-    'label' => '',
     'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => '',
+  ),
+  'action::views_bulk_operations_modify_action' => array(
+    'selected' => 0,
+    'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => '',
+    'settings' => array(
+      'show_all_tokens' => 1,
+      'display_values' => array(
+        '_all_' => '_all_',
+      ),
+    ),
   ),
   'action::views_bulk_operations_user_roles_action' => array(
     'selected' => 0,
-    'skip_confirmation' => 0,
-    'override_label' => 1,
-    'label' => '',
     'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => '',
   ),
   'action::views_bulk_operations_argument_selector_action' => array(
     'selected' => 0,
     'skip_confirmation' => 0,
-    'override_label' => 1,
+    'override_label' => 0,
     'label' => '',
+    'settings' => array(
+      'url' => '',
+    ),
   ),
   'action::system_send_email_action' => array(
     'selected' => 0,
-    'skip_confirmation' => 0,
-    'override_label' => 1,
-    'label' => '',
     'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => '',
+  ),
+  'action::pathauto_user_update_action' => array(
+    'selected' => 0,
+    'postpone_processing' => 0,
+    'skip_confirmation' => 0,
+    'override_label' => 0,
+    'label' => '',
   ),
 );
 /* Field: User: Name */
@@ -210,3 +246,33 @@ $handler->display->display_options['footer']['text']['field'] = 'area';
 $handler->display->display_options['footer']['text']['content'] = '<a href="/admin/people/create">Add User</a>';
 $handler->display->display_options['footer']['text']['format'] = 'default';
 $handler->display->display_options['path'] = 'admin/dashboard/manage-users';
+$translatables['manage_users'] = array(
+  t('Defaults'),
+  t('more'),
+  t('Apply'),
+  t('Reset'),
+  t('Sort by'),
+  t('Asc'),
+  t('Desc'),
+  t('Items per page'),
+  t('- All -'),
+  t('Offset'),
+  t('« first'),
+  t('‹ previous'),
+  t('next ›'),
+  t('last »'),
+  t('User'),
+  t('- Choose an operation -'),
+  t('Username'),
+  t('Active'),
+  t('Roles'),
+  t('Member For'),
+  t('Last Access'),
+  t('Operations'),
+  t('User:'),
+  t('User: Name'),
+  t('Page'),
+  t('Users'),
+  t('<a href="/admin/people/create">Add User</a>'),
+);
+

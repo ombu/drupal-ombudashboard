@@ -96,3 +96,32 @@ function ombudashboard_batch_finished($success, $results, $operations) {
   }
   drupal_set_message($message, $type);
 }
+
+/**
+ * Callback for enabling/disabling SSL on a page.
+ */
+function ombudashboard_toggle_ssl() {
+  if ($path = $_GET['destination']) {
+    $pages = variable_get('securepages_pages', '');
+    $enabled = drupal_match_path($path, $pages);
+    $pages = explode("\n", $pages);
+    if (!$enabled) {
+      $pages[] = $path;
+      $message = t('SSL has been enabled for this path');
+    }
+    else {
+      if (array_search($path, $pages) !== FALSE) {
+        unset($pages[array_search($path, $pages)]);
+      }
+      $message = t('SSL has been disabled for this path');
+    }
+
+    drupal_set_message($message);
+    variable_set('securepages_pages', implode("\n", $pages));
+
+    drupal_goto($path);
+  }
+  else {
+    drupal_goto('<front>');
+  }
+}
