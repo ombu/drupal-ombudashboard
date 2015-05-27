@@ -23,6 +23,7 @@ function ombudashboard_install() {
   variable_set('securepages_pages', <<<EOD
 admin/*
 node/*/edit
+user
 user/*
 EOD
 );
