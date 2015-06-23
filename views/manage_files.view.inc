@@ -238,4 +238,13 @@ $handler->display->display_options['filters']['status']['group'] = 1;
 /* Display: Manage Files */
 $handler = $view->new_display('page', 'Manage Files', 'page');
 $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+$handler->display->display_options['defaults']['header'] = FALSE;
+/* Header: Global: Text area */
+$handler->display->display_options['header']['area']['id'] = 'area';
+$handler->display->display_options['header']['area']['table'] = 'views';
+$handler->display->display_options['header']['area']['field'] = 'area';
+$handler->display->display_options['header']['area']['label'] = 'Add File';
+$handler->display->display_options['header']['area']['empty'] = TRUE;
+$handler->display->display_options['header']['area']['content'] = '<a href="/file/add?destination=admin/dashboard/manage-files"><strong>&#43;</strong> Add file</a>';
+$handler->display->display_options['header']['area']['format'] = 'default';
 $handler->display->display_options['path'] = 'admin/dashboard/manage-files';
