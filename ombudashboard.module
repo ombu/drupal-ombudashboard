@@ -755,7 +755,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
 
   // Get the current path.
   global $user;
-  $curr_path = base_path() . drupal_get_path_alias();
+  $curr_path = url();
   $variables['curr_path'] = $curr_path;
 
   // Add user items
