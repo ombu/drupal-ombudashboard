@@ -275,7 +275,7 @@ Drupal.dashboardToolbar = {
       // smartphone landscape threshold, so that it will gracefully resume
       // accessibility if the window width is increased back to the desktop
       // threshold.  This accompanies styles in toolbar.css.
-      if ($(window).width() <= 1024) {
+      if ($(window).outerWidth() <= 1024) {
         this.toolbarClose();
       }
 
