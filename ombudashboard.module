@@ -174,7 +174,7 @@ JS;
   }
 
   // Add Toolbar. Don't show when on a media overlay.
-  if (user_access('show dashboard toolbar') && $page['#theme'] != 'media_dialog_page') {
+  if (user_access('show dashboard toolbar') && $page['#theme'] != 'media_dialog_page' && overlay_set_mode() != 'child') {
     $page['page_bottom']['ombu_toolbar'] = array(
       '#theme' => 'ombu_toolbar',
     );
