@@ -15,3 +15,10 @@
 #core-content-operations dl {
   margin-bottom: 10px;
 }
+
+#toolbar-gated {
+  float: left;
+  margin: -5px 10px -10px 0;
+  padding: 5px;
+  background-color: #cccc33;
+}

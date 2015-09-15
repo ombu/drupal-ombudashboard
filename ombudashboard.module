@@ -806,8 +806,53 @@ function template_preprocess_ombu_toolbar(&$variables) {
     ),
   );
 
+  // Add Published and Gated Items to toolbar
+  $published = '';
+
+  // Check for node
+  $is_node = menu_get_object();
+
+  if (!empty($is_node)) {
+    $node = $is_node;
+    // Get the gated status of the node
+    $gated_status = ($node->field_gated[LANGUAGE_NONE][0]['value'] == 1) ? TRUE : NULL;
+
+    // Setup gated item
+    if (!empty($gated_status)) {
+      $gated_items = array();
+      $gated_items['attributes']['id'] = 'toolbar-gated';
+      $gated_items['items'] = array(
+        array(
+          'data' => t('Gated'),
+          'class' => array('gated-status gated-status-gated'),
+        ),
+      );
+
+      $gated = theme('item_list', $gated_items);
+    }
+
+    // Setup published item
+    // @TODO update to use workbench statuses when workbench is integrated
+    $published_status = ($node->status == 1) ? 'Published' : 'Unpublished';
+    $published_class = strtolower($published_status);
+
+    $published_items = array();
+    $published_items['attributes']['id'] = 'toolbar-published';
+    $published_items['attributes']['class'] = (empty($gated_status)) ? array('published-only') : array('');
+    $published_items['items'] = array(
+      array(
+        'data' => t($published_status),
+        'class' => array('status status-' . $published_class),
+      ),
+    );
+
+    $published = theme('item_list',$published_items);
+  }
+
   $variables['menu'] = $menu;
   $variables['drawer'] = $drawer;
+  $variables['published'] = $published;
+  $variables['gated'] = (!empty($gated_status)) ? $gated : '';
 
   drupal_add_library('ombudashboard', 'ombutoolbar');
   drupal_add_js(array('ombutoolbar' => array('top_padding' => variable_get('ombutoolbar_top_padding', TRUE))), 'setting');
