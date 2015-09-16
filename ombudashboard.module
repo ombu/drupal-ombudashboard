@@ -806,15 +806,12 @@ function template_preprocess_ombu_toolbar(&$variables) {
     ),
   );
 
-  // Add Published status to toolbar
-  // $published = '';
+  // Add statuses to toolbar
   // Initialize statuses
-  $variables['statuses'] = array();
+  $statuses = array();
 
   // Check for node
   $is_node = menu_get_object();
-  $variables['node'] = $is_node;
-
 
   if (!empty($is_node)) {
     $node = $is_node;
@@ -836,10 +833,11 @@ function template_preprocess_ombu_toolbar(&$variables) {
 
     $published = theme('item_list',$published_items);
 
-    $variables['statuses']['published'] = $published;
-
+    $statuses['published']['status'] = $published;
+    drupal_alter('ombutoolbar_status', $statuses);
   }
 
+  $variables['statuses'] = $statuses;
   $variables['menu'] = $menu;
   $variables['drawer'] = $drawer;
 
