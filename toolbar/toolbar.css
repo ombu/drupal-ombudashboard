@@ -263,39 +263,23 @@
 #toolbar .toolbar-collapse-button:hover {
   background: #000000 url(collapse.png) no-repeat center -16px !important;
 }
-
-#toolbar-gated {
-  float: left;
-  margin: -5px 10px -10px 0;
-  padding: 5px;
-  background-color: #cccc33;
-  color: #000;
-}
-
 #toolbar-published {
   float: left;
   margin: -5px 0 -10px -10px;
   color: #fff;
 }
-
 #toolbar-published.published-only {
   margin-left: 0;
 }
-
-
 #toolbar-published .status {
   padding: 5px;
 }
-
 #toolbar-published .status.status-published {
   background-color: #339933;
 }
-
 #toolbar-published .status.status-unpublished {
   background-color: #c03;
 }
-
-
 /**
  * IE 6 Fix.
  *

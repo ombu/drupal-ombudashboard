@@ -4,12 +4,14 @@
  * Render OMBU toolbar
  *
  */
+
 ?>
 <div id="toolbar" class="toolbar overlay-displace-top clearfix toolbar-processed" style="display: none;">
     <div class="toolbar-expanded-items clearfix">
         <div class="toolbar-menu clearfix">
-          <?php print render($gated) ?>
-          <?php print render($published) ?>
+          <?php foreach ($statuses as $status):  ?>
+            <?php print render($status); ?>
+          <?php endforeach; ?>
           <?php print render($menu) ?>
         </div>
         <div class="toolbar-drawer clearfix">
