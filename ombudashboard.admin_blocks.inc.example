@@ -262,8 +262,8 @@ function _ombudashboard_get_supplementary_content_block() {
 
   if (user_access('administer files')) {
     $content[] = array(
-      'title' => 'Files',
-      'href' => 'admin/dashboard/manage-files',
+      'title' => 'Media',
+      'href' => 'admin/dashboard/manage-media',
       'localized_options' => array(),
       'description' => 'Edit and delete media files',
     );
