@@ -823,7 +823,6 @@ function template_preprocess_ombu_toolbar(&$variables) {
 
     $published_items = array();
     $published_items['attributes']['id'] = 'toolbar-published';
-    $published_items['attributes']['class'] = (empty($gated_status)) ? array('published-only') : array('');
     $published_items['items'] = array(
       array(
         'data' => t($published_status),
