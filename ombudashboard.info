@@ -5,7 +5,7 @@ package = 'OMBU'
 core = 7.x
 php = 5.1
 
-version = 7.x-0.3.1
+version = 7.x-0.4
 
 dependencies[] = views_bulk_operations
 dependencies[] = statistics

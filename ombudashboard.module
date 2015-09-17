@@ -306,7 +306,6 @@ function ombudashboard_views_api() {
 function ombudashboard_views_default_views() {
   $files = array(
     'manage_users.view.inc',
-    'manage_files.view.inc',
   );
 
   // Conditionally include content management screen based on if workbench
@@ -732,7 +731,7 @@ function template_preprocess_ombu_toolbar(&$variables) {
 
   // Get the current path.
   global $user;
-  $curr_path = base_path() . drupal_get_path_alias();
+  $curr_path = url();
   $variables['curr_path'] = $curr_path;
 
   // Add user items
