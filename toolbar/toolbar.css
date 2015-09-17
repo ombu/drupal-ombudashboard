@@ -263,6 +263,20 @@
 #toolbar .toolbar-collapse-button:hover {
   background: #000000 url(collapse.png) no-repeat center -16px !important;
 }
+#toolbar-published {
+  float: left;
+  margin: -5px 0 -10px 0;
+  color: #fff;
+}
+#toolbar-published .status {
+  padding: 5px;
+}
+#toolbar-published .status.status-published {
+  background-color: #339933;
+}
+#toolbar-published .status.status-unpublished {
+  background-color: #c03;
+}
 /**
  * IE 6 Fix.
  *
