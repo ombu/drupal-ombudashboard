@@ -105,6 +105,24 @@ function _ombudashboard_content_block() {
     }
   }
 
+  if (user_access('administer files')) {
+    $content[] = array(
+      'title' => 'Media',
+      'operations' => array(
+        array(
+          'title' => 'Add',
+          'href' => 'admin/dashboard/manage-media/add',
+          'localized_options' => array(),
+        ),
+        array(
+          'title' => 'Manage',
+          'href' => 'admin/dashboard/manage-media',
+          'localized_options' => array(),
+        ),
+      ),
+    );
+  }
+
   return $content;
 }
 
@@ -258,15 +276,6 @@ function _ombudashboard_get_supplementary_content_block() {
   module_load_include('php', 'ombudashboard', 'supplementary_content.inc');
   foreach(ombudashboard_get_supplementary_content_list() as $i => $obj) {
     $content[] = $obj;
-  }
-
-  if (user_access('administer files')) {
-    $content[] = array(
-      'title' => 'Media',
-      'href' => 'admin/dashboard/manage-media',
-      'localized_options' => array(),
-      'description' => 'Edit and delete media files',
-    );
   }
 
   if (user_access('administer redirects')) {
