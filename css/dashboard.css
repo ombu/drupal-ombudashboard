@@ -15,3 +15,10 @@
 #core-content-operations dl {
   margin-bottom: 10px;
 }
+
+#code-content-node-picker .form-item {
+  padding-top: 0;
+}
+#code-content-node-picker a.select2-choice {
+  margin-left: 0;
+}
