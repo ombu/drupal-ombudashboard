@@ -23,6 +23,63 @@ $handler->display->display_options['exposed_form']['type'] = 'basic';
 $handler->display->display_options['pager']['type'] = 'full';
 $handler->display->display_options['pager']['options']['items_per_page'] = 35;
 $handler->display->display_options['style_plugin'] = 'table';
+$handler->display->display_options['style_options']['columns'] = array(
+  'views_bulk_operations' => 'views_bulk_operations',
+  'title' => 'title',
+  'type' => 'type',
+  'created' => 'created',
+  'changed' => 'changed',
+  'status' => 'status',
+  'edit_node' => 'edit_node',
+);
+$handler->display->display_options['style_options']['default'] = 'changed';
+$handler->display->display_options['style_options']['info'] = array(
+  'views_bulk_operations' => array(
+    'align' => '',
+    'separator' => '',
+    'empty_column' => 0,
+  ),
+  'title' => array(
+    'sortable' => 1,
+    'default_sort_order' => 'asc',
+    'align' => '',
+    'separator' => '',
+    'empty_column' => 0,
+  ),
+  'type' => array(
+    'sortable' => 0,
+    'default_sort_order' => 'asc',
+    'align' => '',
+    'separator' => '',
+    'empty_column' => 0,
+  ),
+  'created' => array(
+    'sortable' => 1,
+    'default_sort_order' => 'asc',
+    'align' => 'views-align-right',
+    'separator' => '',
+    'empty_column' => 0,
+  ),
+  'changed' => array(
+    'sortable' => 1,
+    'default_sort_order' => 'desc',
+    'align' => 'views-align-right',
+    'separator' => '',
+    'empty_column' => 0,
+  ),
+  'status' => array(
+    'sortable' => 0,
+    'default_sort_order' => 'asc',
+    'align' => '',
+    'separator' => '',
+    'empty_column' => 0,
+  ),
+  'edit_node' => array(
+    'align' => '',
+    'separator' => '',
+    'empty_column' => 0,
+  ),
+);
 /* No results behavior: Global: Text area */
 $handler->display->display_options['empty']['text']['id'] = 'area';
 $handler->display->display_options['empty']['text']['table'] = 'views';
@@ -38,50 +95,49 @@ $handler->display->display_options['fields']['views_bulk_operations']['element_l
 $handler->display->display_options['fields']['views_bulk_operations']['hide_alter_empty'] = FALSE;
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
-$handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_result'] = 1;
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
   'action::node_assign_owner_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::views_bulk_operations_delete_item' => array(
     'selected' => 1,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 0,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::system_message_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::views_bulk_operations_script_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::node_make_sticky_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::node_make_unsticky_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::views_bulk_operations_argument_selector_action' => array(
     'selected' => 0,
@@ -91,59 +147,59 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_opera
   ),
   'action::node_promote_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::node_publish_action' => array(
     'selected' => 1,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::system_goto_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::node_unpromote_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::node_save_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::system_send_email_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::node_unpublish_action' => array(
     'selected' => 1,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
   'action::node_unpublish_by_keyword_action' => array(
     'selected' => 0,
-    'use_queue' => 0,
     'skip_confirmation' => 0,
     'override_label' => 1,
     'label' => '',
+    'postpone_processing' => 0,
   ),
 );
 /* Field: Content: Title */
@@ -154,6 +210,21 @@ $handler->display->display_options['fields']['title']['field'] = 'title';
 $handler->display->display_options['fields']['type']['id'] = 'type';
 $handler->display->display_options['fields']['type']['table'] = 'node';
 $handler->display->display_options['fields']['type']['field'] = 'type';
+/* Field: Content: Post date */
+$handler->display->display_options['fields']['created']['id'] = 'created';
+$handler->display->display_options['fields']['created']['table'] = 'node';
+$handler->display->display_options['fields']['created']['field'] = 'created';
+$handler->display->display_options['fields']['created']['label'] = 'Created date';
+$handler->display->display_options['fields']['created']['date_format'] = 'custom';
+$handler->display->display_options['fields']['created']['custom_date_format'] = 'D, M j, Y h:i:s A';
+$handler->display->display_options['fields']['created']['second_date_format'] = 'short';
+/* Field: Content: Updated date */
+$handler->display->display_options['fields']['changed']['id'] = 'changed';
+$handler->display->display_options['fields']['changed']['table'] = 'node';
+$handler->display->display_options['fields']['changed']['field'] = 'changed';
+$handler->display->display_options['fields']['changed']['date_format'] = 'custom';
+$handler->display->display_options['fields']['changed']['custom_date_format'] = 'D, M j, Y h:i:s A';
+$handler->display->display_options['fields']['changed']['second_date_format'] = 'short';
 /* Field: Content: Published */
 $handler->display->display_options['fields']['status']['id'] = 'status';
 $handler->display->display_options['fields']['status']['table'] = 'node';
