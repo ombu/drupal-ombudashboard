@@ -123,11 +123,11 @@ function ombudashboard_siteconfig($op, $form) {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
-    $form['services']['google_analytics_key'] = array(
-      '#title' => t('Google Analytics Key'),
+    $form['services']['google_tag_manager_container_id'] = array(
+      '#title' => t('Google Tag Manager Container ID'),
       '#type' => 'textfield',
-      '#default_value' => variable_get('google_analytics_key', ''),
-      '#description' => 'Google Analytics will be used if this key is provided. <em>Ex Key: "UA-1234567-89"</em>',
+      '#default_value' => variable_get('google_tag_manager_container_id', ''),
+      '#description' => '<a href="https://www.google.com/analytics/tag-manager/" target="_blank">Google Tag Manager</a> will be used if this ID is provided. <em>Ex Key: "GTM-HPMD7C"</em>',
     );
     $form['services']['google_site_verification_key'] = array(
       '#title' => t('Google Site Verification Key'),
