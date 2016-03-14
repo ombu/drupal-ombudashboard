@@ -14,8 +14,6 @@
 //----------------------------------------------------------------------------//
 Drupal.dashboardToolbar = {
 
-    noTimer: false,
-
     init: function() {
 
         // Show toolbar div
@@ -125,23 +123,12 @@ Drupal.dashboardToolbar = {
                 .prependTo('.toolbar-shortcuts .core-content')
                 .append(s);
 
-            $(s)
-                .change(function(ev){
+            $(s).change(function(ev){
                     var i = ev.target.value;
                     items.hide();
                     if(i == 'null') return;
                     $(items[i]).show();
-                })
-                .hover(
-                    function(e) {
-                        Drupal.dashboardToolbar.cancelDrawerTimer();
-                        Drupal.dashboardToolbar.noTimer = true;
-                    },
-                    function(e) {
-
-                    }
-                );
-
+                });
         }
     },
 
@@ -174,17 +161,11 @@ Drupal.dashboardToolbar = {
     },
 
     startDrawerTimer: function() {
-
-        if (Drupal.dashboardToolbar.noTimer) {
-            Drupal.dashboardToolbar.noTimer = false;
-            return;
-        }
-
         // Set Click handler
         $(window).bind('click.dashboardToolbar', Drupal.dashboardToolbar.clickHandler);
 
         // Start Timer
-        Drupal.dashboardToolbar.closeDrawerTimer = setTimeout("Drupal.dashboardToolbar.closeDrawer()", 500);
+        Drupal.dashboardToolbar.closeDrawerTimer = setTimeout("Drupal.dashboardToolbar.closeDrawer()", 800);
 
     },
 
@@ -200,11 +181,8 @@ Drupal.dashboardToolbar = {
     },
 
     clickHandler: function(e) {
-
         if ( !$(e.target).hasParent('#toolbar') ) {
-
             Drupal.dashboardToolbar.closeDrawer();
-
         }
     },
 
