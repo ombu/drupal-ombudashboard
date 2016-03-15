@@ -280,13 +280,3 @@
 /**
  * Mixins
  */
-
-/* Hide toolbar below the smartphone landscape threshold */
-@media all and (max-width: 1024px) {
-  html[style] {
-    padding-top: 0 !important;
-  }
-  #toolbar[style] {
-    display: none !important;
-  }
-}
