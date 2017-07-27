@@ -29,9 +29,9 @@ function coreContentDropdown() {
   jQuery(s).change(function(ev){
 
     var i = ev.target.value;
-    operations.hide();
+    operations.css('display','none'); 
     if(i == 'null') return;
-    jQuery(operations[i]).show(); // using eq() was resulting in unexpected behavior
+    jQuery(operations[i]).css('display','inline-block'); // using eq() was resulting in unexpected behavior
   });
 
   jQuery('#core-content-operations').addClass('processed');

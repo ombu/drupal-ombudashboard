@@ -500,7 +500,7 @@ function theme_ombu_admin_block_content_manage($variables) {
 
       $output .= '<dd class="btn-group">';
       foreach ($item['operations'] as $key => $op) {
-        $op['localized_options']['attributes']['class'][] = 'btn';
+        $op['localized_options']['attributes']['class'][] = 'button';
         $output .= ' ' . l($op['title'], $op['href'], $op['localized_options']);
       }
       $output .= "</dd>";

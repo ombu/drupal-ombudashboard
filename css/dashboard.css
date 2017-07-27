@@ -5,6 +5,7 @@
 }
 #core-content-operations .select2-container {
   width: 250px !important;
+  margin-bottom: 5px;
 }
 #core-content-operations a.select2-choice {
   padding-left: 8px;
@@ -15,10 +16,34 @@
 #core-content-operations dl {
   margin-bottom: 10px;
 }
-
 #code-content-node-picker .form-item {
   padding-top: 0;
 }
 #code-content-node-picker a.select2-choice {
   margin-left: 0;
+}
+#core-content-operations .btn-group a.button {
+  padding: 4px 17px;
+  padding-left: 17px;
+  padding-right: 17px;
+  margin-top: 2px;
+}
+#core-content-operations dl {
+  display: inline-block;
+}
+#core-content-operations .btn-group a.button:active {
+  background: #666;
+  color: #fff;
+  border-color: #555;
+  text-shadow: #222 0 -1px 0;
+}
+#core-content-operations .description {
+  width: 100%;
+}
+@media only screen and (max-width: 1110px) {
+  #core-content-operations dl {
+    display: inline-block;
+    margin-top: 15px;
+    margin-left: -20px;
+  }
 }
