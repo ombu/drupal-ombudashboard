@@ -109,7 +109,7 @@ Drupal.dashboardToolbar = {
             }
 
             var s = document.createElement('select');
-            s.className = "form-select select2-excluded";
+            s.className = "form-select no-select2";
             s.id = "core-content-select";
             addOption(s, 'null', '- Choose a type of content -');
             items.each( function(i) {
