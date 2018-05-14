@@ -330,7 +330,12 @@ function ombudashboard_library() {
     'version' => '0.1',
     'js' => array(
       drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.js' => array(),
+      array(
+        'data' => array('tableHeaderOffset' => 'Drupal.dashboardToolbar.height'),
+        'type' => 'setting'
+      ),
     ),
+
     'css' => array(
       drupal_get_path('module', 'ombudashboard') . '/toolbar/toolbar.css' => array(),
     ),
