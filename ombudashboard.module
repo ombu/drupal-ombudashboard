@@ -758,76 +758,117 @@ function template_preprocess_ombu_toolbar(&$variables) {
   $curr_path = base_path() . drupal_get_path_alias();
   $variables['curr_path'] = $curr_path;
 
-  // Add user items
-  $menu['user'] = array(
-    '#weight' => 100,
-    '#prefix' => '<ul id="toolbar-user">',
-    '#suffix' => '</ul>',
-    array(
+  if (!in_array('CRM Engagements', $user->roles)) {
+
+    // Add user items
+    $menu['user'] = array(
+      '#weight' => 100,
+      '#prefix' => '<ul id="toolbar-user">',
+      '#suffix' => '</ul>',
       array(
-        '#theme' => 'menu_link',
-        '#title' => 'Welcome <strong>' . $user->name . '</strong>',
-        '#href' => "user/$user->uid/edit",
-        '#localized_options' => array(
-          'html' => TRUE,
-          'attributes' => array(
-            'title' => 'Edit account',
+        array(
+          '#theme' => 'menu_link',
+          '#title' => 'Welcome <strong>' . $user->name . '</strong>',
+          '#href' => "user/$user->uid/edit",
+          '#localized_options' => array(
+            'html' => TRUE,
+            'attributes' => array(
+              'title' => 'Edit account',
+            ),
           ),
-        ),
-        '#attributes' => array(
-          'class' => array('account', 'first'),
-        ),
-        '#below' => array(),
-      ),
-      array(
-        '#theme' => 'menu_link',
-        '#title' => 'Dashboard',
-        '#href' => 'admin/dashboard',
-        '#localized_options' => array(
-          'attributes' => array(
-            'class' => array('dashboard'),
+          '#attributes' => array(
+            'class' => array('account', 'first'),
           ),
+          '#below' => array(),
         ),
-        '#attributes' => array(),
-        '#below' => array(),
-      ),
-      array(
-        '#theme' => 'menu_link',
-        '#title' => 'Visit Site',
-        '#href' => '<front>',
-        '#localized_options' => array(),
-        '#attributes' => array(
-          'class' => array('visit-site'),
-        ),
-        '#below' => array(),
-      ),
-      array(
-        '#theme' => 'menu_link',
-        '#title' => 'Log out',
-        '#href' => 'user/logout',
-        '#localized_options' => array(),
-        '#attributes' => array(
-          'class' => array('logout'),
-        ),
-        '#below' => array(),
-      ),
-      array(
-        '#theme' => 'menu_link',
-        '#title' => 'Collapse Toolbar',
-        '#href' => $curr_path,
-        '#localized_options' => array(
-          'attributes' => array(
-            'class' => array('toolbar-collapse-button'),
-            'title' => 'Collapse Toolbar',
+        array(
+          '#theme' => 'menu_link',
+          '#title' => 'Dashboard',
+          '#href' => 'admin/dashboard',
+          '#localized_options' => array(
+            'attributes' => array(
+              'class' => array('dashboard'),
+            ),
           ),
+          '#attributes' => array(),
+          '#below' => array(),
         ),
-        '#attributes' => array(
-          'class' => array('logout'),
+        array(
+          '#theme' => 'menu_link',
+          '#title' => 'Visit Site',
+          '#href' => '<front>',
+          '#localized_options' => array(),
+          '#attributes' => array(
+            'class' => array('visit-site'),
+          ),
+          '#below' => array(),
         ),
-        '#below' => array(),
+        array(
+          '#theme' => 'menu_link',
+          '#title' => 'Log out',
+          '#href' => 'user/logout',
+          '#localized_options' => array(),
+          '#attributes' => array(
+            'class' => array('logout'),
+          ),
+          '#below' => array(),
+        ),
+        array(
+          '#theme' => 'menu_link',
+          '#title' => 'Collapse Toolbar',
+          '#href' => $curr_path,
+          '#localized_options' => array(
+            'attributes' => array(
+              'class' => array('toolbar-collapse-button'),
+              'title' => 'Collapse Toolbar',
+            ),
+          ),
+          '#attributes' => array(
+            'class' => array('logout'),
+          ),
+          '#below' => array(),
+        ),
       ),
-    ),
-  );
+    );
+
+  }
+  else {
+    
+    // Add user items
+    $menu['user'] = array(
+      '#weight' => 100,
+      '#prefix' => '<ul id="toolbar-user">',
+      '#suffix' => '</ul>',
+      array(
+        array(
+          '#theme' => 'menu_link',
+          '#title' => 'Log out',
+          '#href' => 'user/logout',
+          '#localized_options' => array(),
+          '#attributes' => array(
+            'class' => array('logout'),
+          ),
+          '#below' => array(),
+        ),
+        array(
+          '#theme' => 'menu_link',
+          '#title' => 'Collapse Toolbar',
+          '#href' => $curr_path,
+          '#localized_options' => array(
+            'attributes' => array(
+              'class' => array('toolbar-collapse-button'),
+              'title' => 'Collapse Toolbar',
+            ),
+          ),
+          '#attributes' => array(
+            'class' => array('logout'),
+          ),
+          '#below' => array(),
+        ),
+      ),
+    );
+    
+  }
 
   $variables['menu'] = $menu;
   $variables['drawer'] = $drawer;
