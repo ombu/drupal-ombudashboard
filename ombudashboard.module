@@ -570,8 +570,8 @@ function theme_ombu_admin_block_content($variables) {
  */
 function template_preprocess_ombu_toolbar(&$variables) {
   $drawer_counter = 0;
-  $drawer = '';
-  $menu = '';
+  $drawer = array();
+  $menu = array();
 
   // Build local tasks links.
   $this_page_links = array();
